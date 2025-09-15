@@ -21,4 +21,5 @@
 
 ```js
 const supabaseUrl = 'https://vuhpparcgkmagpdsgups.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1aHBwYXJjZ2ttYWdwZHNndXBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4MDA4ODQsImV4cCI6MjA3MzM3Njg4NH0.NyY5uhTpkJFYDlTI4I2jnz3ZM9z7QEkgw1dYz9dFxe8';
+
+const supabaseKey = ';
