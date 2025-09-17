@@ -28,96 +28,6 @@ app.get('/health', (req, res) => {
   res.json({ status: "OK", message: "Activation API running!" });
 });
 
-// 📦 الحصول على جميع المنتجات
-app.get('/products', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('is_active', true)
-      .order('name', { ascending: true });
-
-    if (error) throw error;
-
-    res.json({
-      success: true,
-      products: data
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to fetch products" });
-  }
-});
-
-// ➕ إضافة منتج جديد
-app.post('/admin/products', authenticateAdmin, async (req, res) => {
-  const { name, version, description, price } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ success: false, message: "Product name is required" });
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .insert([
-        {
-          name,
-          version: version || '1.0',
-          description,
-          price: price || 0
-        }
-      ])
-      .select();
-
-    if (error) throw error;
-
-    res.json({
-      success: true,
-      message: "Product added successfully!",
-      product: data[0]
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to add product" });
-  }
-});
-
-// ✏️ تحديث منتج
-app.put('/admin/products/:id', authenticateAdmin, async (req, res) => {
-  const { id } = req.params;
-  const { name, version, description, price, is_active } = req.body;
-
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .update({
-        name,
-        version,
-        description,
-        price,
-        is_active,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', id)
-      .select();
-
-    if (error) throw error;
-
-    res.json({
-      success: true,
-      message: "Product updated successfully!",
-      product: data[0]
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to update product" });
-  }
-});
-
-
 // 🔐 تسجيل مستخدم جديد (عبر البريد أو Device ID)
 app.post('/register', async (req, res) => {
   const { email, device_id } = req.body;
@@ -192,17 +102,39 @@ async function findProductByName(productName) {
   return data;
 }
 
+// 🔍 البحث عن المنتج بالمعرف
+async function findProductById(productId) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
+  
+  if (error || !data) {
+    return null;
+  }
+  
+  return data;
+}
+
 // 🔁 تفعيل المنتج
 app.post('/activate', async (req, res) => {
-  const { product_key, device_id, product_name } = req.body;
+  const { product_key, device_id, product_name, product_id } = req.body;
 
-  if (!product_key || !device_id || !product_name) {
-    return res.status(400).json({ success: false, message: "product_key, device_id, and product_name are required" });
+  if (!product_key || !device_id || (!product_name && !product_id)) {
+    return res.status(400).json({ success: false, message: "product_key, device_id, and product_name or product_id are required" });
   }
 
   try {
-    // البحث عن المنتج
-    const product = await findProductByName(product_name);
+    let product;
+    
+    // البحث عن المنتج باستخدام المعرف أو الاسم
+    if (product_id) {
+      product = await findProductById(product_id);
+    } else {
+      product = await findProductByName(product_name);
+    }
+    
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
@@ -291,7 +223,7 @@ app.post('/activate', async (req, res) => {
       success: true,
       message: "Product activated successfully!",
       activation_id: activation.id,
-      product: product_name,
+      product: product.name,
       device_id,
       activated_at: activation.activated_at
     });
@@ -304,19 +236,13 @@ app.post('/activate', async (req, res) => {
 
 // 🔎 التحقق من حالة التفعيل
 app.post('/verify', async (req, res) => {
-  const { device_id, product_name } = req.body;
+  const { device_id, product_id } = req.body;
 
-  if (!device_id || !product_name) {
-    return res.status(400).json({ success: false, message: "device_id and product_name are required" });
+  if (!device_id || !product_id) {
+    return res.status(400).json({ success: false, message: "device_id and product_id are required" });
   }
 
   try {
-    // البحث عن المنتج
-    const product = await findProductByName(product_name);
-    if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
-    }
-
     // البحث عن التفعيل النشط
     const { data: activation, error } = await supabase
       .from('activations')
@@ -326,7 +252,7 @@ app.post('/verify', async (req, res) => {
         products (name, version)
       `)
       .eq('device_id', device_id)
-      .eq('product_id', product.id)
+      .eq('product_id', product_id)
       .eq('is_active', true)
       .single();
 
@@ -355,6 +281,27 @@ app.post('/verify', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Verification failed" });
+  }
+});
+
+// 📦 الحصول على جميع المنتجات
+app.get('/products', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      products: data
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch products" });
   }
 });
 
@@ -424,25 +371,28 @@ function authenticateAdmin(req, res, next) {
 
 // ➕ إضافة مفتاح جديد
 app.post('/admin/keys', authenticateAdmin, async (req, res) => {
-  const { product_name, notes, count = 1 } = req.body;
+  const { product_id, notes, count = 1 } = req.body;
 
-  if (!product_name) {
-    return res.status(400).json({ success: false, message: "Product name is required" });
+  if (!product_id) {
+    return res.status(400).json({ success: false, message: "Product ID is required" });
   }
 
   try {
-    // البحث عن المنتج
-    const product = await findProductByName(product_name);
-    if (!product) {
+    // التحقق من وجود المنتج
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .select('name')
+      .eq('id', product_id)
+      .single();
+
+    if (productError || !product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
 
     const generateKey = () => {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       let result = '';
-      for (let i = 0; i < 6; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
+      for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
       return result;
     };
 
@@ -451,10 +401,10 @@ app.post('/admin/keys', authenticateAdmin, async (req, res) => {
       const key = `${generateKey()}-${generateKey()}-${generateKey()}`;
       keys.push({
         key_value: key,
-        product_id: product.id,
+        product_id: product_id,
         is_used: false,
         created_by: req.user.email,
-        notes: notes || `Generated by ${req.user.email}`
+        notes: notes || `مفتاح لـ ${product.name} - تم إنشاؤه بواسطة ${req.user.email}`
       });
     }
 
@@ -484,7 +434,7 @@ app.get('/admin/keys', authenticateAdmin, async (req, res) => {
       .from('product_keys')
       .select(`
         *,
-        products (name)
+        products (name, version)
       `)
       .order('created_at', { ascending: false });
 
@@ -494,6 +444,123 @@ app.get('/admin/keys', authenticateAdmin, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Failed to fetch keys" });
+  }
+});
+
+// ❌ حذف مفتاح (غير مستخدم فقط)
+app.delete('/admin/keys/:key_value', authenticateAdmin, async (req, res) => {
+  const { key_value } = req.params;
+
+  try {
+    const { data, error } = await supabase
+      .from('product_keys')
+      .select('is_used')
+      .eq('key_value', key_value)
+      .single();
+
+    if (error) return res.status(404).json({ success: false, message: "Key not found" });
+
+    if (data.is_used) {
+      return res.status(400).json({ success: false, message: "Cannot delete used key" });
+    }
+
+    const { error: delError } = await supabase
+      .from('product_keys')
+      .delete()
+      .eq('key_value', key_value);
+
+    if (delError) throw delError;
+
+    res.json({ success: true, message: "Key deleted successfully!" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to delete key" });
+  }
+});
+
+// ➕ إضافة منتج جديد
+app.post('/admin/products', authenticateAdmin, async (req, res) => {
+  const { name, version, description, price } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ success: false, message: "Product name is required" });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([
+        {
+          name,
+          version: version || '1.0',
+          description,
+          price: price || 0
+        }
+      ])
+      .select();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: "Product added successfully!",
+      product: data[0]
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to add product" });
+  }
+});
+
+// 📦 الحصول على جميع المنتجات (للمشرفين)
+app.get('/admin/products', authenticateAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+
+    res.json({ success: true, products: data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch products" });
+  }
+});
+
+// ✏️ تحديث منتج
+app.put('/admin/products/:id', authenticateAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, version, description, price, is_active } = req.body;
+
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .update({
+        name,
+        version,
+        description,
+        price,
+        is_active,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: "Product updated successfully!",
+      product: data[0]
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to update product" });
   }
 });
 
@@ -521,9 +588,17 @@ app.get('/admin/stats', authenticateAdmin, async (req, res) => {
     // عدد المنتجات
     const { data: products, error: productsError } = await supabase
       .from('products')
-      .select('*', { count: 'exact' });
+      .select('*', { count: 'exact' })
+      .eq('is_active', true);
 
     if (productsError) throw productsError;
+
+    // عدد المستخدمين
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('*', { count: 'exact' });
+
+    if (usersError) throw usersError;
 
     res.json({
       success: true,
@@ -531,7 +606,8 @@ app.get('/admin/stats', authenticateAdmin, async (req, res) => {
         total_activations: activations.length,
         used_keys: usedKeys,
         unused_keys: unusedKeys,
-        total_products: products.length
+        total_products: products.length,
+        total_users: users.length
       }
     });
 
@@ -541,38 +617,80 @@ app.get('/admin/stats', authenticateAdmin, async (req, res) => {
   }
 });
 
+// 📋 الحصول على سجل التفعيلات
+app.get('/admin/activations', authenticateAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('activations')
+      .select(`
+        *,
+        product_keys (key_value),
+        products (name, version),
+        users (email, device_id)
+      `)
+      .order('activated_at', { ascending: false })
+      .limit(100);
+
+    if (error) throw error;
+
+    res.json({ success: true, activations: data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch activations" });
+  }
+});
+
 // 🚀 تشغيل الخادم
 app.listen(PORT, () => {
   console.log(`🚀 Activation API running on http://localhost:${PORT}`);
 });
 
-// إنشاء مشرف افتراضي إذا لم يكن موجودًا (للتطوير)
+// إنشاء مشرف افتراضي إذا لم يكن موجودًا
 async function createDefaultAdmin() {
   try {
-    const { data: existingAdmin } = await supabase
+    // التحقق من وجود المشرف الافتراضي
+    const { data: existingAdmin, error: checkError } = await supabase
       .from('admins')
       .select('*')
       .eq('email', 'admin@example.com')
       .single();
 
-    if (!existingAdmin) {
-      const passwordHash = await bcrypt.hash('admin123', 10);
-      await supabase
+    if (checkError || !existingAdmin) {
+      // كلمة المرور الافتراضية
+      const defaultPassword = 'admin123';
+      
+      // تشفير كلمة المرور
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(defaultPassword, saltRounds);
+      
+      // إنشاء المشرف الافتراضي
+      const { data: newAdmin, error: createError } = await supabase
         .from('admins')
         .insert([
           {
             email: 'admin@example.com',
             password_hash: passwordHash,
-            name: 'System Administrator',
+            name: 'المشرف الرئيسي',
             is_super_admin: true
           }
-        ]);
+        ])
+        .select();
       
-      console.log('Default admin created: admin@example.com / admin123');
+      if (createError) {
+        console.error('فشل في إنشاء المشرف الافتراضي:', createError.message);
+      } else {
+        console.log('تم إنشاء المشرف الافتراضي بنجاح');
+        console.log('البريد الإلكتروني: admin@example.com');
+        console.log('كلمة المرور: admin123');
+        console.log('يجب تغيير كلمة المرور بعد أول تسجيل دخول!');
+      }
+    } else {
+      console.log('المشرف الافتراضي موجود بالفعل');
     }
   } catch (error) {
-    console.error('Error creating default admin:', error);
+    console.error('خطأ في إنشاء المشرف الافتراضي:', error);
   }
 }
 
+// استدعاء الدالة عند بدء التشغيل
 createDefaultAdmin();
