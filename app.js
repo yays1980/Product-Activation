@@ -164,6 +164,7 @@ app.post('/activate', async (req, res) => {
 });
 
 // 🔐 تسجيل دخول المشرف
+// 🔐 تسجيل دخول المشرف - الإصدار المحسن
 app.post('/admin/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -172,19 +173,22 @@ app.post('/admin/login', async (req, res) => {
   }
 
   try {
+    // في بيئة الإنتاج، استخدم جدولاً منفصلاً للمشرفين أو حقول مناسبة
     const { data: admin, error } = await supabase
       .from('users')
       .select('*')
       .eq('email', email)
+      .eq('is_admin', true) // تأكد من وجود هذا الحقل في جدول users
       .single();
 
-    if (error || !admin || !admin.is_admin) {
+    if (error || !admin) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
-// تحقق من كلمة المرور بشكل مباشر (مؤقت)
-// const isValid = await bcrypt.compare(password, admin.password_hash);
-const isValid = password === "ydsoft2016";
-   // const isValid = await bcrypt.compare(password, admin.password_hash);
+
+    // في بيئة الإنتاج، استخدم كلمات مرور مشفرة
+    // const isValid = await bcrypt.compare(password, admin.password_hash);
+    const isValid = password === "ydsoft2016";
+    
     if (!isValid) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
@@ -203,7 +207,6 @@ const isValid = password === "ydsoft2016";
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
-
 // 🛡️ تحقق من صلاحية المشرف
 function authenticateAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
