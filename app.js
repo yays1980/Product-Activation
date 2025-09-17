@@ -184,7 +184,7 @@ app.post('/admin/login', async (req, res) => {
 
     const isValid = await bcrypt.compare(password, admin.password_hash);
     if (!isValid) {
-      return res.status(407).json({ success: false, message: "Invalid credentials" });
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
     const token = jwt.sign({ userId: admin.id, role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
