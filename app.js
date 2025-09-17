@@ -1,7 +1,7 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // تم إضافته لاحقًا
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -21,7 +21,7 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 🔑 سر توكن JWT
-const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey1234567890';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-here';
 
 // 🟢 نقطة فحص الحالة
 app.get('/health', (req, res) => {
@@ -38,6 +38,8 @@ app.post('/register', async (req, res) => {
 
   try {
     let existingUser;
+    
+    // البحث بالبريد الإلكتروني إذا وجد
     if (email) {
       const { data: userData, error: emailError } = await supabase
         .from('users')
@@ -46,7 +48,9 @@ app.post('/register', async (req, res) => {
         .single();
       existingUser = userData;
     }
-    if (device_id) {
+    
+    // البحث بمعرف الجهاز إذا لم يتم العثور على مستخدم بالبريد
+    if (device_id && !existingUser) {
       const { data: userData, error: deviceIdError } = await supabase
         .from('users')
         .select('*')
@@ -82,7 +86,23 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 🔁 تفعيل المنتج (مباشر - بدون اشتراك)
+// 🔍 البحث عن المنتج بالاسم
+async function findProductByName(productName) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('name', productName)
+    .eq('is_active', true)
+    .single();
+  
+  if (error || !data) {
+    return null;
+  }
+  
+  return data;
+}
+
+// 🔁 تفعيل المنتج
 app.post('/activate', async (req, res) => {
   const { product_key, device_id, product_name } = req.body;
 
@@ -91,70 +111,99 @@ app.post('/activate', async (req, res) => {
   }
 
   try {
+    // البحث عن المنتج
+    const product = await findProductByName(product_name);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
     // التحقق من صحة مفتاح التفعيل
     const { data: keyData, error: keyError } = await supabase
       .from('product_keys')
       .select('*')
       .eq('key_value', product_key)
       .eq('is_used', false)
+      .eq('product_id', product.id)
       .single();
 
     if (keyError || !keyData) {
       return res.status(404).json({ success: false, message: "Invalid or used product key" });
     }
 
-    // التحقق مما إذا كان الجهاز مسجلًا مسبقًا
-    const { data: existingDevice, error: deviceError } = await supabase
-      .from('devices')
-      .select('*')
+    // البحث عن المستخدم المرتبط بالجهاز
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
       .eq('device_id', device_id)
       .single();
 
-    if (existingDevice) {
-      // ✅ الجهاز مسجل — نُحدث فقط تاريخ التفعيل
-      await supabase
-        .from('devices')
-        .update({ activated_at: new Date().toISOString(), product_name })
-        .eq('id', existingDevice.id);
+    let userId = userData?.id;
 
-      // علّم المفتاح بأنه مستخدم الآن
-      await supabase
-        .from('product_keys')
-        .update({ is_used: true })
-        .eq('key_value', product_key);
+    // إذا لم يكن المستخدم مسجلاً، ننشئ مستخدمًا جديدًا
+    if (!userId) {
+      const { data: newUser, error: newUserError } = await supabase
+        .from('users')
+        .insert([{ device_id }])
+        .select()
+        .single();
+      
+      if (newUserError) throw newUserError;
+      userId = newUser.id;
+    }
 
-      return res.json({
-        success: true,
-        message: "Product re-activated on this device!",
-        product: product_name,
-        last_activated: new Date().toISOString()
+    // التحقق من وجود تفعيل سابق لهذا المنتج على هذا الجهاز
+    const { data: existingActivation, error: activationError } = await supabase
+      .from('activations')
+      .select('*')
+      .eq('device_id', device_id)
+      .eq('product_id', product.id)
+      .eq('is_active', true)
+      .single();
+
+    if (existingActivation) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Product already activated on this device" 
       });
     }
 
-    // ✅ جهاز جديد — أنشئ سجلًا جديدًا
-    await supabase
-      .from('devices')
+    // إنشاء التفعيل الجديد
+    const { data: activation, error: activationInsertError } = await supabase
+      .from('activations')
       .insert([
         {
-          user_id: null, // يمكن ربطه لاحقًا
-          device_id,
-          product_name,
-          activated_at: new Date().toISOString()
+          user_id: userId,
+          product_id: product.id,
+          device_id: device_id,
+          product_key_id: keyData.id,
+          activated_at: new Date().toISOString(),
+          last_check: new Date().toISOString(),
+          is_active: true
         }
-      ]);
+      ])
+      .select()
+      .single();
 
-    // علّم المفتاح بأنه مستخدم
-    await supabase
+    if (activationInsertError) throw activationInsertError;
+
+    // تحديث حالة المفتاح إلى مستخدم
+    const { error: keyUpdateError } = await supabase
       .from('product_keys')
-      .update({ is_used: true })
-      .eq('key_value', product_key);
+      .update({ 
+        is_used: true, 
+        used_at: new Date().toISOString() 
+      })
+      .eq('id', keyData.id);
+
+    if (keyUpdateError) throw keyUpdateError;
 
     res.json({
       success: true,
-      message: "Product activated successfully on new device!",
+      message: "Product activated successfully!",
+      activation_id: activation.id,
       product: product_name,
       device_id,
-      last_activated: new Date().toISOString()
+      activated_at: activation.activated_at
     });
 
   } catch (err) {
@@ -163,8 +212,63 @@ app.post('/activate', async (req, res) => {
   }
 });
 
+// 🔎 التحقق من حالة التفعيل
+app.post('/verify', async (req, res) => {
+  const { device_id, product_name } = req.body;
+
+  if (!device_id || !product_name) {
+    return res.status(400).json({ success: false, message: "device_id and product_name are required" });
+  }
+
+  try {
+    // البحث عن المنتج
+    const product = await findProductByName(product_name);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    // البحث عن التفعيل النشط
+    const { data: activation, error } = await supabase
+      .from('activations')
+      .select(`
+        *,
+        product_keys (key_value),
+        products (name, version)
+      `)
+      .eq('device_id', device_id)
+      .eq('product_id', product.id)
+      .eq('is_active', true)
+      .single();
+
+    if (error || !activation) {
+      return res.status(404).json({ success: false, message: "No active activation found" });
+    }
+
+    // تحديث وقت آخر تحقق
+    await supabase
+      .from('activations')
+      .update({ last_check: new Date().toISOString() })
+      .eq('id', activation.id);
+
+    res.json({
+      success: true,
+      message: "Activation is valid",
+      activation: {
+        product: activation.products.name,
+        version: activation.products.version,
+        device_id: activation.device_id,
+        activated_at: activation.activated_at,
+        key: activation.product_keys.key_value
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Verification failed" });
+  }
+});
+
 // 🔐 تسجيل دخول المشرف
-// 🔐 تسجيل دخول المشرف - الإصدار المحسن
 app.post('/admin/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -173,33 +277,37 @@ app.post('/admin/login', async (req, res) => {
   }
 
   try {
-    // في بيئة الإنتاج، استخدم جدولاً منفصلاً للمشرفين أو حقول مناسبة
     const { data: admin, error } = await supabase
-      .from('users')
+      .from('admins')
       .select('*')
       .eq('email', email)
-      .eq('is_admin', true) // تأكد من وجود هذا الحقل في جدول users
       .single();
 
     if (error || !admin) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    // في بيئة الإنتاج، استخدم كلمات مرور مشفرة
-    // const isValid = await bcrypt.compare(password, admin.password_hash);
-    const isValid = password === "ydsoft2016";
-    
+    const isValid = await bcrypt.compare(password, admin.password_hash);
     if (!isValid) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: admin.id, role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ 
+      userId: admin.id, 
+      email: admin.email,
+      role: 'admin',
+      isSuperAdmin: admin.is_super_admin 
+    }, JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       success: true,
       message: "Admin login successful!",
       token,
-      user: { email: admin.email }
+      user: { 
+        email: admin.email, 
+        name: admin.name,
+        is_super_admin: admin.is_super_admin
+      }
     });
 
   } catch (err) {
@@ -207,105 +315,86 @@ app.post('/admin/login', async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 // 🛡️ تحقق من صلاحية المشرف
 function authenticateAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  if (!token) return res.sendStatus(401);
+  if (!token) return res.status(401).json({ success: false, message: "Access token required" });
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err || user.role !== 'admin') return res.sendStatus(403);
+    if (err) return res.status(403).json({ success: false, message: "Invalid or expired token" });
+    if (user.role !== 'admin') return res.status(403).json({ success: false, message: "Admin access required" });
+    
     req.user = user;
     next();
   });
 }
 
-// ➕ إضافة مفتاح جديد (بإذن المشرف)
-app.post('/admin/add-key', authenticateAdmin, async (req, res) => {
-  const { product_name, notes } = req.body;
+// ➕ إضافة مفتاح جديد
+app.post('/admin/keys', authenticateAdmin, async (req, res) => {
+  const { product_name, notes, count = 1 } = req.body;
 
   if (!product_name) {
     return res.status(400).json({ success: false, message: "Product name is required" });
   }
 
-  const generateKey = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-    return result;
-  };
-
-  const key = `${generateKey()}-${generateKey()}-${generateKey()}`;
-
   try {
+    // البحث عن المنتج
+    const product = await findProductByName(product_name);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const generateKey = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    };
+
+    const keys = [];
+    for (let i = 0; i < count; i++) {
+      const key = `${generateKey()}-${generateKey()}-${generateKey()}`;
+      keys.push({
+        key_value: key,
+        product_id: product.id,
+        is_used: false,
+        created_by: req.user.email,
+        notes: notes || `Generated by ${req.user.email}`
+      });
+    }
+
     const { data, error } = await supabase
       .from('product_keys')
-      .insert([
-        {
-          key_value: key,
-          product_name,
-          is_used: false,
-          created_by: req.user.email,
-          notes
-        }
-      ])
+      .insert(keys)
       .select();
 
     if (error) throw error;
 
     res.json({
       success: true,
-      message: "Key added successfully!",
-      key: data[0]
+      message: `Generated ${keys.length} key(s) successfully!`,
+      keys: data
     });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: "Failed to add key" });
+    res.status(500).json({ success: false, message: "Failed to generate keys" });
   }
 });
 
-// ❌ حذف مفتاح (غير مستخدم فقط)
-app.delete('/admin/delete-key/:key_value', authenticateAdmin, async (req, res) => {
-  const { key_value } = req.params;
-
-  try {
-    const { data, error } = await supabase
-      .from('product_keys')
-      .select('is_used')
-      .eq('key_value', key_value)
-      .single();
-
-    if (error) return res.status(404).json({ success: false, message: "Key not found" });
-
-    if (data.is_used) {
-      return res.status(400).json({ success: false, message: "Cannot delete used key" });
-    }
-
-    const { data: deleted, error: delError } = await supabase
-      .from('product_keys')
-      .delete()
-      .eq('key_value', key_value);
-
-    if (delError) throw delError;
-
-    res.json({ success: true, message: "Key deleted successfully!" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to delete key" });
-  }
-});
-
-// 📊 استرجاع جميع المفاتيح (للوحة التحكم)
+// 📊 الحصول على جميع المفاتيح
 app.get('/admin/keys', authenticateAdmin, async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('product_keys')
       .select(`
         *,
-        users(email)
+        products (name)
       `)
       .order('created_at', { ascending: false });
 
@@ -318,38 +407,47 @@ app.get('/admin/keys', authenticateAdmin, async (req, res) => {
   }
 });
 
-// 📈 تقرير التفعيلات
-app.get('/admin/reports', authenticateAdmin, async (req, res) => {
+// 📈 الحصول على إحصائيات التفعيل
+app.get('/admin/stats', authenticateAdmin, async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from('activation_reports')
-      .select(`
-        *,
-        users(email),
-        subscriptions(status, current_period_end)
-      `)
-      .order('activated_at', { ascending: false })
-      .limit(100);
+    // عدد التفعيلات النشطة
+    const { data: activations, error: activationsError } = await supabase
+      .from('activations')
+      .select('*', { count: 'exact' })
+      .eq('is_active', true);
 
-    if (error) throw error;
+    if (activationsError) throw activationsError;
 
-    const totalActivations = data.length;
-    const activeSubs = data.filter(r => r.subscription_status === 'active').length;
-    const revenue = data.reduce((sum, r) => sum + (r.payment_amount || 0), 0);
+    // عدد المفاتيح المستخدمة وغير المستخدمة
+    const { data: keys, error: keysError } = await supabase
+      .from('product_keys')
+      .select('is_used', { count: 'exact' });
+
+    if (keysError) throw keysError;
+
+    const usedKeys = keys.filter(k => k.is_used).length;
+    const unusedKeys = keys.length - usedKeys;
+
+    // عدد المنتجات
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*', { count: 'exact' });
+
+    if (productsError) throw productsError;
 
     res.json({
       success: true,
-      reports: data,
       stats: {
-        totalActivations,
-        activeSubscribers: activeSubs,
-        totalRevenue: revenue.toFixed(2)
+        total_activations: activations.length,
+        used_keys: usedKeys,
+        unused_keys: unusedKeys,
+        total_products: products.length
       }
     });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: "Failed to fetch reports" });
+    res.status(500).json({ success: false, message: "Failed to fetch statistics" });
   }
 });
 
@@ -357,3 +455,34 @@ app.get('/admin/reports', authenticateAdmin, async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Activation API running on http://localhost:${PORT}`);
 });
+
+// إنشاء مشرف افتراضي إذا لم يكن موجودًا (للتطوير)
+async function createDefaultAdmin() {
+  try {
+    const { data: existingAdmin } = await supabase
+      .from('admins')
+      .select('*')
+      .eq('email', 'admin@example.com')
+      .single();
+
+    if (!existingAdmin) {
+      const passwordHash = await bcrypt.hash('admin123', 10);
+      await supabase
+        .from('admins')
+        .insert([
+          {
+            email: 'admin@example.com',
+            password_hash: passwordHash,
+            name: 'System Administrator',
+            is_super_admin: true
+          }
+        ]);
+      
+      console.log('Default admin created: admin@example.com / admin123');
+    }
+  } catch (error) {
+    console.error('Error creating default admin:', error);
+  }
+}
+
+createDefaultAdmin();
