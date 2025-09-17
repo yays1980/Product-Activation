@@ -28,6 +28,96 @@ app.get('/health', (req, res) => {
   res.json({ status: "OK", message: "Activation API running!" });
 });
 
+// 📦 الحصول على جميع المنتجات
+app.get('/products', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      products: data
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch products" });
+  }
+});
+
+// ➕ إضافة منتج جديد
+app.post('/admin/products', authenticateAdmin, async (req, res) => {
+  const { name, version, description, price } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ success: false, message: "Product name is required" });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([
+        {
+          name,
+          version: version || '1.0',
+          description,
+          price: price || 0
+        }
+      ])
+      .select();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: "Product added successfully!",
+      product: data[0]
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to add product" });
+  }
+});
+
+// ✏️ تحديث منتج
+app.put('/admin/products/:id', authenticateAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, version, description, price, is_active } = req.body;
+
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .update({
+        name,
+        version,
+        description,
+        price,
+        is_active,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: "Product updated successfully!",
+      product: data[0]
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to update product" });
+  }
+});
+
+
 // 🔐 تسجيل مستخدم جديد (عبر البريد أو Device ID)
 app.post('/register', async (req, res) => {
   const { email, device_id } = req.body;
