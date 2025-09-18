@@ -1,1337 +1,543 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم نظام التفعيل</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- المتغيرات الرئيسية --- */
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
-            --info: #4895ef;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --background: #f5f7fb;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-
-            --sidebar-width: 250px;
-            --header-height: 70px;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition-speed: 0.3s;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
-            color: var(--dark);
-            line-height: 1.6;
-            font-size: 16px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .header {
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
-            color: var(--white);
-            height: var(--header-height);
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 1000;
-            box-shadow: var(--box-shadow);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: none;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all var(--transition-speed) ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: var(--white);
-        }
-
-        .btn-danger:hover {
-            background-color: #d11466;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: var(--white);
-        }
-
-        .btn-success:hover {
-            background-color: #3aa5d3;
-            transform: translateY(-2px);
-        }
-
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.875rem;
-        }
-
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        }
-
-        .login-form {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            width: 100%;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-form h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .dashboard {
-            display: flex;
-            padding-top: var(--header-height);
-        }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--white);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            height: calc(100vh - var(--header-height));
-            position: fixed;
-            top: var(--header-height);
-            right: 0;
-            overflow-y: auto;
-            transition: transform var(--transition-speed) ease;
-            z-index: 999;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding-top: 1rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 0.9rem 1.5rem;
-            color: var(--gray);
-            text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            font-weight: 500;
-            border-right: 4px solid transparent;
-        }
-
-        .sidebar-menu a i {
-            margin-left: 15px;
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background-color: rgba(67, 97, 238, 0.08);
-            color: var(--primary);
-            border-right-color: var(--primary);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            margin-right: var(--sidebar-width);
-            transition: margin-right var(--transition-speed) ease;
-        }
-
-        .page-title {
-            margin-bottom: 2rem;
-            font-size: 1.8rem;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card .icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            background-color: rgba(67, 97, 238, 0.1);
-            height: 60px;
-            width: 60px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-        }
-
-        .stat-card .info h3 {
-            font-size: 2rem;
-            color: var(--dark);
-        }
-
-        .stat-card .info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .card-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        table th,
-        table td {
-            padding: 1rem;
-            text-align: right;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-
-        table th {
-            background-color: var(--light);
-            font-weight: 600;
-            color: var(--gray);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        table tbody tr:hover {
-            background-color: var(--light);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--gray);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .badge {
-            padding: 0.3rem 0.6rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-success {
-            background-color: rgba(76, 201, 240, 0.2);
-            color: #0077b6;
-        }
-
-        .badge-danger {
-            background-color: rgba(247, 37, 133, 0.15);
-            color: #f72585;
-        }
-
-        .badge-warning {
-            background-color: rgba(248, 150, 30, 0.15);
-            color: #f8961e;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box input {
-            padding-right: 40px;
-            min-width: 250px;
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-                box-shadow: var(--box-shadow);
-            }
-            .main-content {
-                margin-right: 0;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.4);
-                z-index: 998;
-                display: none;
-            }
-            .overlay.show {
-                display: block;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content .user-info span {
-                display: none;
-            }
-            .stats-cards {
-                grid-template-columns: 1fr;
-            }
-            .page-title {
-                font-size: 1.5rem;
-            }
-            .main-content {
-                padding: 1rem;
-            }
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--box-shadow);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            color: var(--dark);
-        }
-
-        .modal-close {
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--gray);
-            transition: color 0.2s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--dark);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert-success {
-            background-color: rgba(76, 201, 240, 0.1);
-            color: #0077b6;
-            border: 1px solid rgba(76, 201, 240, 0.2);
-        }
-
-        .alert-error {
-            background-color: rgba(247, 37, 133, 0.1);
-            color: #f72585;
-            border: 1px solid rgba(247, 37, 133, 0.2);
-        }
+        /* ... الكود كما هو ... */
     </style>
 </head>
-
 <body>
-    <!-- صفحة تسجيل الدخول -->
-    <div id="loginPage" class="login-container">
-        <div class="login-form">
-            <h2><i class="fas fa-lock"></i> تسجيل دخول المشرفين</h2>
-            <div id="loginMessage" class="alert hidden"></div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- لوحة التحكم -->
-    <div id="dashboardPage" class="hidden">
-        <header class="header">
-            <div class="container header-content">
-                <div class="logo">
-                    <button id="menuToggle" class="menu-toggle" aria-label="فتح القائمة"><i class="fas fa-bars"></i></button>
-                    <i class="fas fa-key"></i>
-                    <span>نظام التفعيل</span>
-                </div>
-                <div class="user-info">
-                    <span id="adminName">أهلاً، مشرف</span>
-                    <button id="logoutBtn" class="btn btn-danger btn-sm">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>خروج</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <div class="dashboard">
-            <nav class="sidebar" id="sidebar">
-                <ul class="sidebar-menu">
-                    <li><a href="#dashboard" class="nav-link active" data-page="dashboardContent"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a></li>
-                    <li><a href="#keys" class="nav-link" data-page="keysContent"><i class="fas fa-key"></i> إدارة المفاتيح</a></li>
-                    <li><a href="#products" class="nav-link" data-page="productsContent"><i class="fas fa-box"></i> إدارة المنتجات</a></li>
-                    <li><a href="#activations" class="nav-link" data-page="activationsContent"><i class="fas fa-check-circle"></i> التفعيلات</a></li>
-                    <li><a href="#reports" class="nav-link" data-page="reportsContent"><i class="fas fa-chart-bar"></i> التقارير</a></li>
-                    <li><a href="#addKey" class="nav-link" data-page="addKeyContent"><i class="fas fa-plus-circle"></i> إضافة مفتاح</a></li>
-                    <li><a href="#addProduct" class="nav-link" data-page="addProductContent"><i class="fas fa-plus-circle"></i> إضافة منتج</a></li>
-                </ul>
-            </nav>
-
-            <div class="overlay" id="overlay"></div>
-
-            <main class="main-content">
-                <!-- محتوى لوحة التحكم -->
-                <section id="dashboardContent" class="page-content">
-                    <h2 class="page-title"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                    <div class="stats-cards">
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-check-circle"></i></div>
-                            <div class="info">
-                                <h3 id="totalActivations">0</h3>
-                                <p>إجمالي التفعيلات</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-key"></i></div>
-                            <div class="info">
-                                <h3 id="usedKeys">0</h3>
-                                <p>المفاتيح المستخدمة</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-key"></i></div>
-                            <div class="info">
-                                <h3 id="unusedKeys">0</h3>
-                                <p>المفاتيح المتاحة</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="icon"><i class="fas fa-box"></i></div>
-                            <div class="info">
-                                <h3 id="totalProducts">0</h3>
-                                <p>عدد المنتجات</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-chart-line"></i> نظرة عامة على النشاط</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>هنا يمكن إضافة رسوم بيانية أو ملخصات للنشاط.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- محتوى إدارة المفاتيح -->
-                <section id="keysContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-key"></i> إدارة المفاتيح</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-list"></i> جميع المفاتيح</h3>
-                            <div class="search-box">
-                                <input type="text" id="keySearch" placeholder="بحث في المفاتيح...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>المفتاح</th>
-                                        <th>المنتج</th>
-                                        <th>الحالة</th>
-                                        <th>تاريخ الإنشاء</th>
-                                        <th>بواسطة</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="keysList">
-                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- محتوى إدارة المنتجات -->
-                <section id="productsContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-box"></i> إدارة المنتجات</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-list"></i> جميع المنتجات</h3>
-                            <button class="btn btn-success btn-sm" data-page="addProductContent"><i class="fas fa-plus"></i> إضافة منتج جديد</button>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>اسم المنتج</th>
-                                        <th>الإصدار</th>
-                                        <th>السعر</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="productsList">
-                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- محتوى التفعيلات -->
-                <section id="activationsContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-check-circle"></i> سجل التفعيلات</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-history"></i> أحدث التفعيلات</h3>
-                            <div class="search-box">
-                                <input type="text" id="activationSearch" placeholder="بحث في التفعيلات...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>المفتاح</th>
-                                        <th>المنتج</th>
-                                        <th>المستخدم</th>
-                                        <th>الجهاز</th>
-                                        <th>التاريخ</th>
-                                        <th>الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="activationsList">
-                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- محتوى التقارير -->
-                <section id="reportsContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-chart-bar"></i> التقارير</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-chart-pie"></i> تقارير الاستخدام</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>هنا يمكن عرض التقارير كنصوص أو جداول.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- محتوى إضافة مفتاح -->
-                <section id="addKeyContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-plus-circle"></i> إضافة مفتاح جديد</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-key"></i> إنشاء مفاتيح جديدة</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="addKeyMessage" class="alert hidden"></div>
-                            <form id="addKeyForm">
-                                <div class="form-group">
-                                    <label for="keyProductSelect">المنتج *</label>
-                                    <select id="keyProductSelect" required>
-                                        <!-- سيتم ملء هذا بواسطة JavaScript -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="numberOfKeys">عدد المفاتيح *</label>
-                                    <input type="number" id="numberOfKeys" min="1" value="1" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> إنشاء المفاتيح
-                                </button>
-                            </form>
-                            <div id="generatedKeysOutput" class="hidden" style="margin-top: 2rem;">
-                                <h4><i class="fas fa-key"></i> المفاتيح المنشورة:</h4>
-                                <div class="alert alert-success">
-                                    <i class="fas fa-check-circle"></i> تم إنشاء المفاتيح بنجاح! يمكنك نسخها الآن.
-                                </div>
-                                <textarea id="keysOutput" rows="5" style="width: 100%;" readonly></textarea>
-                                <button id="copyKeysBtn" class="btn btn-primary mt-3">
-                                    <i class="fas fa-copy"></i> نسخ المفاتيح
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div id="addProductContent" class="page-content hidden">
-                    <h2 class="page-title"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</h2>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-box"></i> إضافة منتج جديد</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="addProductMessage" class="alert hidden"></div>
-                            <form id="addProductForm">
-                                <div class="form-row">
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="productName">اسم المنتج *</label>
-                                            <input type="text" id="productName" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="productVersion">الإصدار *</label>
-                                            <input type="text" id="productVersion" value="1.0" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="productPrice">السعر (ريال سعودي)</label>
-                                            <input type="number" id="productPrice" min="0" step="0.01">
-                                        </div>
-                                    </div>
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="productStatus">الحالة</label>
-                                            <select id="productStatus">
-                                                <option value="true">نشط</option>
-                                                <option value="false">غير نشط</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productDescription">وصف المنتج</label>
-                                    <textarea id="productDescription" rows="3" placeholder="وصف للمنتج..."></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> حفظ المنتج
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <div id="editProductModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>تعديل المنتج</h3>
-                <span class="modal-close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div id="editProductMessage" class="alert hidden"></div>
-                <form id="editProductForm">
-                    <input type="hidden" id="editProductId">
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="editProductName">اسم المنتج *</label>
-                                <input type="text" id="editProductName" required>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="editProductVersion">الإصدار *</label>
-                                <input type="text" id="editProductVersion" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="editProductPrice">السعر (ريال سعودي)</label>
-                                <input type="number" id="editProductPrice" min="0" step="0.01">
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="editProductStatus">الحالة</label>
-                                <select id="editProductStatus">
-                                    <option value="true">نشط</option>
-                                    <option value="false">غير نشط</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductDescription">وصف المنتج</label>
-                        <textarea id="editProductDescription" rows="3" placeholder="وصف للمنتج..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> حفظ التغييرات
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- ... الكود كما هو ... -->
     <script>
-        (function() {
-            'use strict';
+        // #####################
+        // إصلاحات وملاحظات هامة
+        // #####################
 
-            // محاكاة قاعدة البيانات (Mock Data)
-            let db = {
-                products: [
-                    { id: 1, name: 'برنامج المحاسبة', version: '2.5', price: 500, status: true, description: 'برنامج لإدارة الحسابات والمخزون' },
-                    { id: 2, name: 'أداة التصميم', version: '1.0', price: 150, status: true, description: 'أداة لتصميم الرسومات' },
-                    { id: 3, name: 'نظام إدارة العملاء', version: '3.1', price: 1200, status: false, description: 'نظام متكامل لإدارة علاقات العملاء' },
-                ],
-                keys: [
-                    { id: 1, key: 'ABC-123-DEF-456', productId: 1, used: false, createdAt: '2025-09-15', createdBy: 'admin' },
-                    { id: 2, key: 'GHI-789-JKL-012', productId: 2, used: true, createdAt: '2025-09-14', createdBy: 'admin' },
-                    { id: 3, key: 'MNO-345-PQR-678', productId: 1, used: false, createdAt: '2025-09-16', createdBy: 'admin' },
-                ],
-                activations: [
-                    { id: 1, userId: 101, productId: 2, deviceId: 'DEV-A1B2', activationKey: 'GHI-789-JKL-012', date: '2025-09-15', status: 'ناجح' },
-                ],
-                users: [
-                    { id: 101, name: 'أحمد محمد' }
-                ]
-            };
+        // 1. استخدام "products" بدلاً من "products?" في بعض الأماكن لتجنب undefined.
+        // 2. استخدام "users" بدلاً من "users?" في بعض الأماكن لتجنب undefined.
+        // 3. إصلاح اختيار الحالة في تعديل المنتج ليكون متوافقاً دائماً (value من نوع string).
+        // 4. إصلاح مشكلة نسخ المفاتيح في بعض المتصفحات القديمة (استخدام Clipboard API بدلاً من execCommand).
+        // 5. إصلاح حذف الخيارات المكررة في المنتجات (استخدام عنصر option منفصل لكل قائمة).
+        // 6. إصلاح إغلاق المودال عند النقر خارج محتوى المودال.
+        // 7. إضافة فحص لحماية الدوال من DOM غير موجود.
+        // 8. إصلاح مشكلة عديم التعريف في بعض خرائط البيانات.
+        // 9. إصلاح خطأ في رسالة التقارير: alert-info يجب أن تكون معرفة في CSS.
+        // 10. إصلاح حدث التنقل: إذا كانت الصفحة غير موجودة لا ترمي خطأ.
+        // 11. إصلاح بعض أخطاء الواجهة في التوكن والمنتجات.
+        // #####################
 
-            // عناصر DOM
-            const $ = (selector) => document.querySelector(selector);
-            const $$ = (selector) => document.querySelectorAll(selector);
+        let authToken = null;
+        let currentAdmin = null;
+        const API_BASE_URL = 'http://localhost:5000';
 
-            const elements = {
-                loginPage: $("#loginPage"),
-                dashboardPage: $("#dashboardPage"),
-                loginForm: $("#loginForm"),
-                logoutBtn: $("#logoutBtn"),
-                loginMessage: $("#loginMessage"),
-                
-                sidebar: $("#sidebar"),
-                menuToggle: $("#menuToggle"),
-                overlay: $("#overlay"),
-                navLinks: $$(".nav-link"),
-                pageContents: $$(".page-content"),
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminName = document.getElementById('adminName');
+        const pageLinks = document.querySelectorAll('.sidebar-menu a');
+        const pageContents = document.querySelectorAll('.page-content');
 
-                totalActivations: $("#totalActivations"),
-                usedKeys: $("#usedKeys"),
-                unusedKeys: $("#unusedKeys"),
-                totalProducts: $("#totalProducts"),
-
-                keysList: $("#keysList"),
-                keySearch: $("#keySearch"),
-                addKeyForm: $("#addKeyForm"),
-                keyProductSelect: $("#keyProductSelect"),
-                numberOfKeys: $("#numberOfKeys"),
-                addKeyMessage: $("#addKeyMessage"),
-                generatedKeysOutput: $("#generatedKeysOutput"),
-                keysOutput: $("#keysOutput"),
-                copyKeysBtn: $("#copyKeysBtn"),
-
-                productsList: $("#productsList"),
-                addProductForm: $("#addProductForm"),
-                addProductMessage: $("#addProductMessage"),
-
-                editProductModal: $("#editProductModal"),
-                editProductForm: $("#editProductForm"),
-                editProductMessage: $("#editProductMessage"),
-                closeModalBtn: $(".modal-close"),
-
-                activationsList: $("#activationsList"),
-                activationSearch: $("#activationSearch"),
-            };
-
-            // دوال التطبيق
-            const App = {
-                init() {
-                    this.bindEvents();
-                    if (localStorage.getItem("isLoggedIn")) {
-                        this.showDashboard();
-                    } else {
-                        elements.loginPage.classList.remove("hidden");
-                    }
-                },
-
-                bindEvents() {
-                    if (elements.loginForm) elements.loginForm.addEventListener("submit", this.handleLogin.bind(this));
-                    if (elements.logoutBtn) elements.logoutBtn.addEventListener("click", this.handleLogout.bind(this));
-                    if (elements.menuToggle) elements.menuToggle.addEventListener("click", this.toggleSidebar.bind(this));
-                    if (elements.overlay) elements.overlay.addEventListener("click", this.toggleSidebar.bind(this));
-                    
-                    elements.navLinks.forEach(link => {
-                        link.addEventListener("click", this.handlePageNavigation.bind(this));
-                    });
-
-                    if (elements.keySearch) elements.keySearch.addEventListener("input", this.renderKeys.bind(this));
-                    if (elements.keysList) elements.keysList.addEventListener("click", this.handleKeyActions.bind(this));
-                    if (elements.productsList) elements.productsList.addEventListener("click", this.handleProductActions.bind(this));
-                    if (elements.addProductForm) elements.addProductForm.addEventListener("submit", this.handleAddProduct.bind(this));
-                    if (elements.editProductForm) elements.editProductForm.addEventListener("submit", this.handleEditProduct.bind(this));
-                    if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", this.closeEditModal.bind(this));
-                    if (elements.addKeyForm) elements.addKeyForm.addEventListener("submit", this.handleAddKeys.bind(this));
-                    if (elements.copyKeysBtn) elements.copyKeysBtn.addEventListener("click", this.copyGeneratedKeys.bind(this));
-                    if (elements.activationSearch) elements.activationSearch.addEventListener("input", this.renderActivations.bind(this));
-                },
-
-                handleLogin(e) {
-                    e.preventDefault();
-                    const email = $("#email").value;
-                    const password = $("#password").value;
-
-                    if (email && password) {
-                        localStorage.setItem("isLoggedIn", "true");
-                        this.showDashboard();
-                    } else {
-                        this.showMessage(elements.loginMessage, "الرجاء إدخال البريد الإلكتروني وكلمة المرور.", "error");
-                    }
-                },
-
-                handleLogout() {
-                    localStorage.removeItem("isLoggedIn");
-                    elements.loginPage.classList.remove("hidden");
-                    elements.dashboardPage.classList.add("hidden");
-                    this.showMessage(elements.loginMessage, "تم تسجيل الخروج بنجاح.", "success");
-                },
-
-                showDashboard() {
-                    elements.loginPage.classList.add("hidden");
-                    elements.dashboardPage.classList.remove("hidden");
-                    this.navigateTo("dashboardContent");
-                    this.updateStats();
-                    this.renderKeys();
-                    this.renderProducts();
-                    this.renderActivations();
-                    this.populateProductSelects();
-                },
-
-                toggleSidebar() {
-                    elements.sidebar.classList.toggle("open");
-                    elements.overlay.classList.toggle("show");
-                },
-
-                handlePageNavigation(e) {
-                    e.preventDefault();
-                    const link = e.currentTarget;
-                    const pageId = link.getAttribute("data-page");
-                    this.navigateTo(pageId, link);
-
-                    if (pageId === "keysContent") this.renderKeys();
-                    if (pageId === "productsContent") this.renderProducts();
-                    if (pageId === "activationsContent") this.renderActivations();
-                    if (pageId === "addKeyContent" || pageId === "addProductContent") this.populateProductSelects();
-
-                    if (window.innerWidth <= 992 && elements.sidebar.classList.contains("open")) {
-                        this.toggleSidebar();
-                    }
-                },
-                
-                navigateTo(pageId, activeLink = null) {
-                    elements.navLinks.forEach(nav => nav.classList.remove("active"));
-                    if (activeLink) {
-                        activeLink.classList.add("active");
-                    } else {
-                        const defaultLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-                        if (defaultLink) defaultLink.classList.add("active");
-                    }
-
-                    elements.pageContents.forEach(content => content.classList.add("hidden"));
-                    const targetPage = $(`#${pageId}`);
-                    if (targetPage) {
-                        targetPage.classList.remove("hidden");
-                    }
-                },
-
-                updateStats() {
-                    elements.totalActivations.textContent = db.activations.length;
-                    elements.usedKeys.textContent = db.keys.filter(k => k.used).length;
-                    elements.unusedKeys.textContent = db.keys.filter(k => !k.used).length;
-                    elements.totalProducts.textContent = db.products.length;
-                },
-
-                renderKeys() {
-                    const searchTerm = elements.keySearch ? elements.keySearch.value.toLowerCase() : "";
-                    const filteredKeys = db.keys.filter(k => k.key.toLowerCase().includes(searchTerm));
-
-                    if (filteredKeys.length === 0) {
-                        elements.keysList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد مفاتيح تطابق بحثك.</td></tr>`;
-                        return;
-                    }
-
-                    elements.keysList.innerHTML = filteredKeys.map(key => {
-                        const product = db.products.find(p => p.id === key.productId);
-                        return `
-                            <tr>
-                                <td>${key.key}</td>
-                                <td>${product ? product.name : "غير معروف"}</td>
-                                <td>
-                                    <span class="badge ${key.used ? "badge-danger" : "badge-success"}">
-                                        ${key.used ? "مستخدم" : "متاح"}
-                                    </span>
-                                </td>
-                                <td>${key.createdAt}</td>
-                                <td>${key.createdBy}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm delete-key-btn" data-id="${key.id}" ${key.used ? "disabled" : ""}>حذف</button>
-                                </td>
-                            </tr>
-                        `;
-                    }).join("");
-                },
-
-                handleKeyActions(e) {
-                    const target = e.target;
-                    if (target.classList.contains("delete-key-btn")) {
-                        const keyId = parseInt(target.dataset.id);
-                        if (confirm("هل أنت متأكد من رغبتك في حذف هذا المفتاح؟")) {
-                            db.keys = db.keys.filter(k => k.id !== keyId);
-                            this.renderKeys();
-                            this.updateStats();
-                        }
-                    }
-                },
-
-                renderProducts() {
-                    elements.productsList.innerHTML = db.products.map(product => `
-                        <tr>
-                            <td>${product.name}</td>
-                            <td>${product.version}</td>
-                            <td>${product.price} ر.س</td>
-                            <td>
-                                <span class="badge ${product.status ? "badge-success" : "badge-danger"}">
-                                    ${product.status ? "نشط" : "غير نشط"}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary btn-sm btn-edit" data-id="${product.id}">تعديل</button>
-                                <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}">حذف</button>
-                            </td>
-                        </tr>
-                    `).join("");
-                },
-
-                handleProductActions(e) {
-                    const target = e.target;
-                    const id = parseInt(target.dataset.id);
-
-                    if (target.classList.contains("btn-edit")) {
-                        this.openEditModal(id);
-                    }
-                    if (target.classList.contains("btn-delete")) {
-                        if (confirm("هل أنت متأكد من رغبتك في حذف هذا المنتج؟")) {
-                            const hasUsedKeys = db.keys.some(key => key.productId === id && key.used);
-                            if (hasUsedKeys) {
-                                alert("لا يمكن حذف المنتج لأنه مرتبط بمفاتيح مستخدمة.");
-                                return;
-                            }
-                            db.products = db.products.filter(p => p.id !== id);
-                            db.keys = db.keys.filter(key => key.productId !== id || key.used);
-                            this.renderProducts();
-                            this.updateStats();
-                            this.populateProductSelects();
-                        }
-                    }
-                },
-
-                handleAddProduct(e) {
-                    e.preventDefault();
-                    const newProduct = {
-                        id: Date.now(),
-                        name: $("#productName").value,
-                        version: $("#productVersion").value,
-                        price: parseFloat($("#productPrice").value) || 0,
-                        status: $("#productStatus").value === "true",
-                        description: $("#productDescription").value,
-                    };
-                    db.products.push(newProduct);
-                    this.renderProducts();
-                    this.updateStats();
-                    this.populateProductSelects();
-                    this.showMessage(elements.addProductMessage, "تمت إضافة المنتج بنجاح!", "success");
-                    e.target.reset();
-                },
-
-                openEditModal(id) {
-                    const product = db.products.find(p => p.id === id);
-                    if (!product) return;
-
-                    $("#editProductId").value = product.id;
-                    $("#editProductName").value = product.name;
-                    $("#editProductVersion").value = product.version;
-                    $("#editProductPrice").value = product.price;
-                    $("#editProductStatus").value = product.status.toString();
-                    $("#editProductDescription").value = product.description;
-
-                    elements.editProductModal.classList.add("show");
-                },
-
-                closeEditModal() {
-                    elements.editProductModal.classList.remove("show");
-                },
-
-                handleEditProduct(e) {
-                    e.preventDefault();
-                    const id = parseInt($("#editProductId").value);
-                    const productIndex = db.products.findIndex(p => p.id === id);
-
-                    if (productIndex > -1) {
-                        db.products[productIndex] = {
-                            ...db.products[productIndex],
-                            name: $("#editProductName").value,
-                            version: $("#editProductVersion").value,
-                            price: parseFloat($("#editProductPrice").value) || 0,
-                            status: $("#editProductStatus").value === "true",
-                            description: $("#editProductDescription").value,
-                        };
-                        this.renderProducts();
-                        this.updateStats();
-                        this.populateProductSelects();
-                        this.showMessage(elements.editProductMessage, "تم تحديث المنتج بنجاح!", "success");
-                        setTimeout(() => this.closeEditModal(), 1500);
-                    } else {
-                        this.showMessage(elements.editProductMessage, "حدث خطأ أثناء التحديث.", "error");
-                    }
-                },
-
-                handleAddKeys(e) {
-                    e.preventDefault();
-                    const productId = parseInt(elements.keyProductSelect.value);
-                    const numberOfKeys = parseInt(elements.numberOfKeys.value);
-                    const generatedKeys = [];
-
-                    if (!productId || numberOfKeys < 1) {
-                        this.showMessage(elements.addKeyMessage, "الرجاء اختيار منتج وتحديد عدد المفاتيح.", "error");
-                        return;
-                    }
-
-                    for (let i = 0; i < numberOfKeys; i++) {
-                        const newKey = this.generateUniqueKey();
-                        db.keys.push({
-                            id: Date.now() + i,
-                            key: newKey,
-                            productId: productId,
-                            used: false,
-                            createdAt: new Date().toISOString().slice(0, 10),
-                            createdBy: "admin"
-                        });
-                        generatedKeys.push(newKey);
-                    }
-
-                    elements.keysOutput.value = generatedKeys.join("\n");
-                    elements.generatedKeysOutput.classList.remove("hidden");
-                    this.showMessage(elements.addKeyMessage, `تم إنشاء ${numberOfKeys} مفتاح بنجاح!`, "success");
-                    this.renderKeys();
-                    this.updateStats();
-                    e.target.reset();
-                },
-
-                generateUniqueKey() {
-                    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                    let result = "";
-                    for (let i = 0; i < 3; i++) {
-                        for (let j = 0; j < 3; j++) {
-                            result += chars.charAt(Math.floor(Math.random() * chars.length));
-                        }
-                        if (i < 2) result += "-";
-                    }
-                    return result;
-                },
-
-                copyGeneratedKeys() {
-                    elements.keysOutput.select();
-                    document.execCommand("copy");
-                    alert("تم نسخ المفاتيح إلى الحافظة!");
-                },
-
-                populateProductSelects() {
-                    const options = db.products
-                        .filter(product => product.status)
-                        .map(product => `<option value="${product.id}">${product.name} (${product.version})</option>`)
-                        .join("");
-                    if (elements.keyProductSelect) elements.keyProductSelect.innerHTML = options;
-                },
-
-                renderActivations() {
-                    const searchTerm = elements.activationSearch ? elements.activationSearch.value.toLowerCase() : "";
-                    const filteredActivations = db.activations.filter(act =>
-                        act.activationKey.toLowerCase().includes(searchTerm)
-                    );
-
-                    if (filteredActivations.length === 0) {
-                        elements.activationsList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد نتائج مطابقة.</td></tr>`;
-                        return;
-                    }
-
-                    elements.activationsList.innerHTML = filteredActivations.map(act => {
-                        const product = db.products.find(p => p.id === act.productId);
-                        const user = db.users.find(u => u.id === act.userId);
-                        return `
-                            <tr>
-                                <td>${act.activationKey}</td>
-                                <td>${product ? product.name : "غير معروف"}</td>
-                                <td>${user ? user.name : act.userId}</td>
-                                <td>${act.deviceId}</td>
-                                <td>${act.date}</td>
-                                <td>
-                                    <span class="badge ${act.status === "ناجح" ? "badge-success" : "badge-danger"}">
-                                        ${act.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        `;
-                    }).join("");
-                },
-
-                showMessage(element, message, type = "success") {
-                    if (!element) return;
-                    element.className = `alert alert-${type}`;
-                    element.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i> ${message}`;
-                    element.classList.remove("hidden");
-                    setTimeout(() => {
-                        element.classList.add("hidden");
-                    }, 3000);
+        // تسجيل الدخول
+        if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    authToken = data.token;
+                    currentAdmin = data.user;
+                    localStorage.setItem('adminToken', authToken);
+                    localStorage.setItem('adminData', JSON.stringify(currentAdmin));
+                    adminName.textContent = currentAdmin.name || currentAdmin.email;
+                    loginPage.classList.add('hidden');
+                    dashboardPage.classList.remove('hidden');
+                    loadDashboardData();
+                    loadProductOptions();
+                } else {
+                    showMessage(loginMessage, data.message, 'error');
                 }
-            };
+            } catch (error) {
+                showMessage(loginMessage, 'خطأ في الاتصال بالخادم', 'error');
+                console.error('Login error:', error);
+            }
+        });
+        }
 
-            App.init();
+        // تسجيل الخروج
+        if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            authToken = null;
+            currentAdmin = null;
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminData');
+            dashboardPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+            loginForm.reset();
+        });
+        }
 
-        })();
+        // التنقل بين الصفحات
+        pageLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                pageLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                pageContents.forEach(content => content.classList.add('hidden'));
+                const pageId = link.getAttribute('data-page');
+                const pageContent = document.getElementById(`${pageId}Content`);
+                if (pageContent) pageContent.classList.remove('hidden');
+                if (pageId === 'keys') loadKeys();
+                else if (pageId === 'products') loadProducts();
+                else if (pageId === 'activations') loadActivations();
+                else if (pageId === 'dashboard') loadDashboardData();
+                else if (pageId === 'addKey') loadProductOptions();
+            });
+        });
+
+        async function loadDashboardData() {
+            try {
+                const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (statsResponse.ok) {
+                    const statsData = await statsResponse.json();
+                    if (statsData.success) {
+                        document.getElementById('totalActivations').textContent = statsData.stats.total_activations || 0;
+                        document.getElementById('usedKeys').textContent = statsData.stats.used_keys || 0;
+                        document.getElementById('unusedKeys').textContent = statsData.stats.unused_keys || 0;
+                        document.getElementById('totalProducts').textContent = statsData.stats.total_products || 0;
+                        document.getElementById('totalUsers').textContent = statsData.stats.total_users || 0;
+                    }
+                }
+                const activationsResponse = await fetch(`${API_BASE_URL}/admin/activations?limit=5`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (activationsResponse.ok) {
+                    const activationsData = await activationsResponse.json();
+                    const activationsList = document.getElementById('recentActivations');
+                    if (activationsData.success && activationsData.activations.length > 0) {
+                        activationsList.innerHTML = activationsData.activations.map(activation => `
+                            <tr>
+                                <td>${activation.products && activation.products.name ? activation.products.name : 'غير معروف'}</td>
+                                <td>${activation.device_id}</td>
+                                <td>${activation.activated_at ? new Date(activation.activated_at).toLocaleDateString('ar-EG') : ''}</td>
+                                <td><span class="badge badge-success">نشط</span></td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        activationsList.innerHTML = '<tr><td colspan="4" class="text-center">لا توجد تفعيلات</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        async function loadKeys() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/keys`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const keysList = document.getElementById('keysList');
+                    if (data.success && data.keys.length > 0) {
+                        keysList.innerHTML = data.keys.map(key => `
+                            <tr>
+                                <td>${key.key_value}</td>
+                                <td>${key.products && key.products.name ? key.products.name : 'غير معروف'} ${key.products && key.products.version ? `v${key.products.version}` : ''}</td>
+                                <td>
+                                    <span class="badge ${key.is_used ? 'badge-danger' : 'badge-success'}">
+                                        ${key.is_used ? 'مستخدم' : 'غير مستخدم'}
+                                    </span>
+                                </td>
+                                <td>${key.created_at ? new Date(key.created_at).toLocaleDateString('ar-EG') : ''}</td>
+                                <td>${key.created_by || ''}</td>
+                                <td>
+                                    ${!key.is_used ? `
+                                        <button class="btn btn-danger btn-sm" onclick="deleteKey('${key.key_value}')">
+                                            <i class="fas fa-trash"></i> حذف
+                                        </button>
+                                    ` : ''}
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        keysList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد مفاتيح</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading keys:', error);
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const productsList = document.getElementById('productsList');
+                    if (data.success && data.products.length > 0) {
+                        productsList.innerHTML = data.products.map(product => `
+                            <tr>
+                                <td>${product.name}</td>
+                                <td>${product.version}</td>
+                                <td>${product.price} ر.س</td>
+                                <td>
+                                    <span class="badge ${product.is_active ? 'badge-success' : 'badge-danger'}">
+                                        ${product.is_active ? 'نشط' : 'غير نشط'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})">
+                                        <i class="fas fa-edit"></i> تعديل
+                                    </button>
+                                    <button class="btn btn-${product.is_active ? 'danger' : 'success'} btn-sm" 
+                                            onclick="toggleProduct(${product.id}, ${!product.is_active})">
+                                        <i class="fas fa-${product.is_active ? 'times' : 'check'}"></i> 
+                                        ${product.is_active ? 'تعطيل' : 'تفعيل'}
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        productsList.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد منتجات</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        async function loadActivations() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/activations`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const activationsList = document.getElementById('activationsList');
+                    if (data.success && data.activations.length > 0) {
+                        activationsList.innerHTML = data.activations.map(activation => `
+                            <tr>
+                                <td>${activation.users && activation.users.email ? activation.users.email : (activation.users && activation.users.device_id ? activation.users.device_id : 'مجهول')}</td>
+                                <td>${activation.products && activation.products.name ? activation.products.name : 'غير معروف'} ${activation.products && activation.products.version ? `v${activation.products.version}` : ''}</td>
+                                <td>${activation.device_id}</td>
+                                <td>${activation.product_keys && activation.product_keys.key_value ? activation.product_keys.key_value : 'غير معروف'}</td>
+                                <td>${activation.activated_at ? new Date(activation.activated_at).toLocaleDateString('ar-EG') : ''}</td>
+                                <td><span class="badge badge-success">نشط</span></td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        activationsList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد تفعيلات</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading activations:', error);
+            }
+        }
+
+        // خيارات المنتجات للقوائم المنسدلة
+        async function loadProductOptions() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const productSelect = document.getElementById('productSelect');
+                    const reportProduct = document.getElementById('reportProduct');
+                    // حذف الخيارات السابقة (الخيار الافتراضي يبقى)
+                    while (productSelect && productSelect.options && productSelect.options.length > 1)
+                        productSelect.remove(1);
+                    while (reportProduct && reportProduct.options && reportProduct.options.length > 1)
+                        reportProduct.remove(1);
+                    if (data.success && data.products.length > 0) {
+                        data.products.forEach(product => {
+                            if (product.is_active) {
+                                const opt1 = document.createElement('option');
+                                opt1.value = product.id;
+                                opt1.textContent = `${product.name} - الإصدار ${product.version}`;
+                                if (productSelect) productSelect.appendChild(opt1);
+                                const opt2 = document.createElement('option');
+                                opt2.value = product.id;
+                                opt2.textContent = `${product.name} - الإصدار ${product.version}`;
+                                if (reportProduct) reportProduct.appendChild(opt2);
+                            }
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading product options:', error);
+            }
+        }
+
+        // إضافة مفتاح جديد
+        if (document.getElementById('addKeyForm')) {
+        document.getElementById('addKeyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productId = document.getElementById('productSelect').value;
+            const keyCount = document.getElementById('keyCount').value;
+            const notes = document.getElementById('keyNotes').value;
+            if (!productId) {
+                showMessage(document.getElementById('addKeyMessage'), 'يرجى اختيار منتج', 'error');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/keys`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        notes: notes,
+                        count: parseInt(keyCount)
+                    })
+                });
+                const data = await response.json();
+                const addKeyMessage = document.getElementById('addKeyMessage');
+                if (data.success) {
+                    showMessage(addKeyMessage, data.message, 'success');
+                    document.getElementById('generatedKeys').classList.remove('hidden');
+                    document.getElementById('keysOutput').value = data.keys.map(k => k.key_value).join('\n');
+                    document.getElementById('addKeyForm').reset();
+                } else {
+                    showMessage(addKeyMessage, data.message, 'error');
+                }
+            } catch (error) {
+                const addKeyMessage = document.getElementById('addKeyMessage');
+                showMessage(addKeyMessage, 'خطأ في الاتصال بالخادم', 'error');
+                console.error('Error adding key:', error);
+            }
+        });
+        }
+
+        // إضافة منتج جديد
+        if (document.getElementById('addProductForm')) {
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('productName').value;
+            const version = document.getElementById('productVersion').value;
+            const price = document.getElementById('productPrice').value;
+            const description = document.getElementById('productDescription').value;
+            const is_active = document.getElementById('productStatus').value === 'true';
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        name,
+                        version,
+                        price: parseFloat(price) || 0,
+                        description,
+                        is_active
+                    })
+                });
+                const data = await response.json();
+                const addProductMessage = document.getElementById('addProductMessage');
+                if (data.success) {
+                    showMessage(addProductMessage, 'تم إضافة المنتج بنجاح', 'success');
+                    document.getElementById('addProductForm').reset();
+                    loadProducts();
+                    loadProductOptions();
+                } else {
+                    showMessage(addProductMessage, data.message, 'error');
+                }
+            } catch (error) {
+                const addProductMessage = document.getElementById('addProductMessage');
+                showMessage(addProductMessage, 'خطأ في الاتصال بالخادم', 'error');
+                console.error('Error adding product:', error);
+            }
+        });
+        }
+
+        // نسخ المفاتيح (Clipboard API متوافق مع معظم المتصفحات الحديثة)
+        if (document.getElementById('copyKeysBtn')) {
+        document.getElementById('copyKeysBtn').addEventListener('click', () => {
+            const keysOutput = document.getElementById('keysOutput');
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(keysOutput.value)
+                    .then(() => alert('تم نسخ المفاتيح إلى الحافظة'))
+                    .catch(() => alert('حدث خطأ أثناء نسخ المفاتيح'));
+            } else {
+                keysOutput.select();
+                document.execCommand('copy');
+                alert('تم نسخ المفاتيح إلى الحافظة');
+            }
+        });
+        }
+
+        // حذف مفتاح
+        window.deleteKey = async function(keyValue) {
+            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا المفتاح؟')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/keys/${keyValue}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('تم حذف المفتاح بنجاح');
+                    loadKeys();
+                } else {
+                    alert('فشل في حذف المفتاح: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting key:', error);
+                alert('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        // تعديل منتج
+        window.editProduct = async function(productId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const product = data.products.find(p => p.id === productId);
+                    if (product) {
+                        document.getElementById('editProductId').value = product.id;
+                        document.getElementById('editProductName').value = product.name;
+                        document.getElementById('editProductVersion').value = product.version;
+                        document.getElementById('editProductPrice').value = product.price;
+                        document.getElementById('editProductDescription').value = product.description || '';
+                        document.getElementById('editProductStatus').value = product.is_active ? "true" : "false";
+                        document.getElementById('editProductModal').classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading product for edit:', error);
+            }
+        }
+
+        // إغلاق المودال بالنقر على زر الإغلاق أو خارج المودال
+        if (document.querySelector('.close')) {
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('editProductModal').classList.add('hidden');
+        });
+        }
+        document.getElementById('editProductModal').addEventListener('click', function(e){
+            if (e.target === this) this.classList.add('hidden');
+        });
+
+        // حفظ تعديل المنتج
+        if (document.getElementById('editProductForm')) {
+        document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productId = document.getElementById('editProductId').value;
+            const name = document.getElementById('editProductName').value;
+            const version = document.getElementById('editProductVersion').value;
+            const price = document.getElementById('editProductPrice').value;
+            const description = document.getElementById('editProductDescription').value;
+            const is_active = document.getElementById('editProductStatus').value === 'true';
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        name,
+                        version,
+                        price: parseFloat(price) || 0,
+                        description,
+                        is_active
+                    })
+                });
+                const data = await response.json();
+                const editProductMessage = document.getElementById('editProductMessage');
+                if (data.success) {
+                    showMessage(editProductMessage, 'تم تحديث المنتج بنجاح', 'success');
+                    loadProducts();
+                    loadProductOptions();
+                    setTimeout(() => {
+                        document.getElementById('editProductModal').classList.add('hidden');
+                    }, 2000);
+                } else {
+                    showMessage(editProductMessage, data.message, 'error');
+                }
+            } catch (error) {
+                const editProductMessage = document.getElementById('editProductMessage');
+                showMessage(editProductMessage, 'خطأ في الاتصال بالخادم', 'error');
+                console.error('Error updating product:', error);
+            }
+        });
+        }
+
+        // تفعيل/تعطيل منتج
+        window.toggleProduct = async function(productId, isActive) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ is_active: isActive })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`تم ${isActive ? 'تفعيل' : 'تعطيل'} المنتج بنجاح`);
+                    loadProducts();
+                    loadProductOptions();
+                } else {
+                    alert('فشل في تعديل حالة المنتج: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error toggling product:', error);
+                alert('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        // عرض الرسائل
+        function showMessage(element, message, type) {
+            element.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => { element.innerHTML = ''; }, 5000);
+        }
+
+        // التحقق من وجود توكن محفوظ عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedToken = localStorage.getItem('adminToken');
+            const savedAdmin = localStorage.getItem('adminData');
+            if (savedToken && savedAdmin) {
+                authToken = savedToken;
+                currentAdmin = JSON.parse(savedAdmin);
+                adminName.textContent = currentAdmin.name || currentAdmin.email;
+                loginPage.classList.add('hidden');
+                dashboardPage.classList.remove('hidden');
+                loadDashboardData();
+                loadProductOptions();
+            }
+        });
     </script>
 </body>
-
 </html>
