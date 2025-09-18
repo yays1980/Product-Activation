@@ -29,7 +29,6 @@
             --transition-speed: 0.3s;
         }
 
-        /* --- إعادة تعيين الأنماط الأساسية --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -48,7 +47,6 @@
             font-size: 16px;
         }
 
-        /* --- الحاوية الرئيسية --- */
         .container {
             width: 100%;
             max-width: 1400px;
@@ -56,7 +54,6 @@
             padding: 0 20px;
         }
 
-        /* --- رأس الصفحة --- */
         .header {
             background: linear-gradient(120deg, var(--primary), var(--secondary));
             color: var(--white);
@@ -91,7 +88,6 @@
             font-size: 1.5rem;
             cursor: pointer;
             display: none;
-            /* يظهر فقط في الشاشات الصغيرة */
         }
 
         .user-info {
@@ -100,7 +96,6 @@
             gap: 15px;
         }
 
-        /* --- الأزرار --- */
         .btn {
             padding: 0.6rem 1.2rem;
             border: none;
@@ -150,7 +145,6 @@
             font-size: 0.875rem;
         }
 
-        /* --- صفحة تسجيل الدخول --- */
         .login-container {
             display: flex;
             justify-content: center;
@@ -174,7 +168,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -191,13 +184,11 @@
             gap: 10px;
         }
 
-        /* --- لوحة التحكم --- */
         .dashboard {
             display: flex;
             padding-top: var(--header-height);
         }
 
-        /* --- الشريط الجانبي --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--white);
@@ -241,7 +232,6 @@
             border-right-color: var(--primary);
         }
 
-        /* --- المحتوى الرئيسي --- */
         .main-content {
             flex: 1;
             padding: 2rem;
@@ -258,7 +248,6 @@
             gap: 10px;
         }
 
-        /* --- الكروت الإحصائية --- */
         .stats-cards {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -303,7 +292,6 @@
             font-size: 0.9rem;
         }
 
-        /* --- البطاقات والجداول --- */
         .card {
             background: var(--white);
             border-radius: var(--border-radius);
@@ -359,7 +347,6 @@
             background-color: var(--light);
         }
 
-        /* --- النماذج --- */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -396,7 +383,6 @@
             gap: 1.5rem;
         }
 
-        /* --- عناصر أخرى --- */
         .badge {
             padding: 0.3rem 0.6rem;
             border-radius: 15px;
@@ -424,7 +410,6 @@
             display: none !important;
         }
 
-        /* --- البحث --- */
         .search-box {
             position: relative;
         }
@@ -442,28 +427,20 @@
             color: var(--gray);
         }
 
-        /* --- التصميم المتجاوب (Responsive) --- */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(100%);
-                /* إخفاء الشريط الجانبي خارج الشاشة */
             }
-
             .sidebar.open {
                 transform: translateX(0);
-                /* إظهار الشريط الجانبي */
                 box-shadow: var(--box-shadow);
             }
-
             .main-content {
                 margin-right: 0;
             }
-
             .menu-toggle {
                 display: block;
             }
-
-            /* طبقة داكنة عند فتح القائمة */
             .overlay {
                 position: fixed;
                 top: 0;
@@ -474,7 +451,6 @@
                 z-index: 998;
                 display: none;
             }
-
             .overlay.show {
                 display: block;
             }
@@ -483,24 +459,18 @@
         @media (max-width: 768px) {
             .header-content .user-info span {
                 display: none;
-                /* إخفاء اسم المشرف في الشاشات الصغيرة */
             }
-
             .stats-cards {
                 grid-template-columns: 1fr;
-                /* كرت واحد في كل سطر */
             }
-
             .page-title {
                 font-size: 1.5rem;
             }
-
             .main-content {
                 padding: 1rem;
             }
         }
 
-        /* Modal styles */
         .modal {
             position: fixed;
             top: 0;
@@ -939,14 +909,10 @@
         </div>
     </div>
     <script>
-        // نستخدم IIFE لإنشاء نطاق خاص بالكود وتجنب تلويث النطاق العام
         (function() {
             'use strict';
 
-            // =================================================================
-            // 1. محاكاة قاعدة البيانات (Mock Data)
-            // في تطبيق حقيقي، هذه البيانات ستأتي من الخادم (API)
-            // =================================================================
+            // محاكاة قاعدة البيانات (Mock Data)
             let db = {
                 products: [
                     { id: 1, name: 'برنامج المحاسبة', version: '2.5', price: 500, status: true, description: 'برنامج لإدارة الحسابات والمخزون' },
@@ -966,9 +932,7 @@
                 ]
             };
 
-            // =================================================================
-            // 2. اختيار عناصر DOM الرئيسية
-            // =================================================================
+            // عناصر DOM
             const $ = (selector) => document.querySelector(selector);
             const $$ = (selector) => document.querySelectorAll(selector);
 
@@ -985,13 +949,11 @@
                 navLinks: $$(".nav-link"),
                 pageContents: $$(".page-content"),
 
-                // الإحصائيات
                 totalActivations: $("#totalActivations"),
                 usedKeys: $("#usedKeys"),
                 unusedKeys: $("#unusedKeys"),
                 totalProducts: $("#totalProducts"),
 
-                // المفاتيح
                 keysList: $("#keysList"),
                 keySearch: $("#keySearch"),
                 addKeyForm: $("#addKeyForm"),
@@ -1002,33 +964,23 @@
                 keysOutput: $("#keysOutput"),
                 copyKeysBtn: $("#copyKeysBtn"),
 
-                // المنتجات
                 productsList: $("#productsList"),
                 addProductForm: $("#addProductForm"),
                 addProductMessage: $("#addProductMessage"),
 
-                // تعديل المنتج (Modal)
                 editProductModal: $("#editProductModal"),
                 editProductForm: $("#editProductForm"),
                 editProductMessage: $("#editProductMessage"),
-                closeModalBtn: $(".modal-close"), // تم التعديل هنا
+                closeModalBtn: $(".modal-close"),
 
-                // التفعيلات
                 activationsList: $("#activationsList"),
                 activationSearch: $("#activationSearch"),
-
-                // التقارير (مثال بسيط)
-                usageChart: $("#usageChart"), // هذا العنصر لم يعد يستخدم للرسم البياني ولكن قد يكون موجودًا في HTML
             };
 
-            // =================================================================
-            // 3. الدوال الرئيسية للتطبيق
-            // =================================================================
+            // دوال التطبيق
             const App = {
                 init() {
-                    // ربط الأحداث عند بدء تشغيل التطبيق
                     this.bindEvents();
-                    // تحقق مما إذا كان المستخدم قد سجل الدخول بالفعل (باستخدام localStorage)
                     if (localStorage.getItem("isLoggedIn")) {
                         this.showDashboard();
                     } else {
@@ -1047,7 +999,7 @@
                     });
 
                     if (elements.keySearch) elements.keySearch.addEventListener("input", this.renderKeys.bind(this));
-                    if (elements.keysList) elements.keysList.addEventListener("click", this.handleKeyActions.bind(this)); // إضافة معالج لأزرار حذف المفاتيح
+                    if (elements.keysList) elements.keysList.addEventListener("click", this.handleKeyActions.bind(this));
                     if (elements.productsList) elements.productsList.addEventListener("click", this.handleProductActions.bind(this));
                     if (elements.addProductForm) elements.addProductForm.addEventListener("submit", this.handleAddProduct.bind(this));
                     if (elements.editProductForm) elements.editProductForm.addEventListener("submit", this.handleEditProduct.bind(this));
@@ -1055,16 +1007,13 @@
                     if (elements.addKeyForm) elements.addKeyForm.addEventListener("submit", this.handleAddKeys.bind(this));
                     if (elements.copyKeysBtn) elements.copyKeysBtn.addEventListener("click", this.copyGeneratedKeys.bind(this));
                     if (elements.activationSearch) elements.activationSearch.addEventListener("input", this.renderActivations.bind(this));
-
                 },
 
-                // --- وظائف المصادقة والتنقل ---
                 handleLogin(e) {
                     e.preventDefault();
                     const email = $("#email").value;
                     const password = $("#password").value;
 
-                    // مثال بسيط للتحقق: أي بريد وكلمة مرور ليست فارغة
                     if (email && password) {
                         localStorage.setItem("isLoggedIn", "true");
                         this.showDashboard();
@@ -1083,14 +1032,12 @@
                 showDashboard() {
                     elements.loginPage.classList.add("hidden");
                     elements.dashboardPage.classList.remove("hidden");
-                    // عرض الصفحة الافتراضية (لوحة التحكم)
                     this.navigateTo("dashboardContent");
                     this.updateStats();
                     this.renderKeys();
                     this.renderProducts();
                     this.renderActivations();
                     this.populateProductSelects();
-                    // this.renderUsageChart(); // تم إزالة استدعاء دالة Chart.js
                 },
 
                 toggleSidebar() {
@@ -1104,44 +1051,32 @@
                     const pageId = link.getAttribute("data-page");
                     this.navigateTo(pageId, link);
 
-                    // تحديث البيانات عند الانتقال لصفحات معينة
                     if (pageId === "keysContent") this.renderKeys();
                     if (pageId === "productsContent") this.renderProducts();
                     if (pageId === "activationsContent") this.renderActivations();
                     if (pageId === "addKeyContent" || pageId === "addProductContent") this.populateProductSelects();
-                    // if (pageId === "reportsContent") this.renderUsageChart(); // تم إزالة استدعاء دالة Chart.js
 
-                    // إغلاق القائمة عند اختيار رابط في وضع الموبايل
                     if (window.innerWidth <= 992 && elements.sidebar.classList.contains("open")) {
                         this.toggleSidebar();
                     }
                 },
                 
                 navigateTo(pageId, activeLink = null) {
-                    // إزالة كلاس 'active' من جميع الروابط وإضافته للرابط الحالي
                     elements.navLinks.forEach(nav => nav.classList.remove("active"));
                     if (activeLink) {
                         activeLink.classList.add("active");
                     } else {
-                        // إذا لم يتم توفير رابط، ابحث عنه
-                        const defaultLink = $(".nav-link[data-page=\"${pageId}\"]");
+                        const defaultLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
                         if (defaultLink) defaultLink.classList.add("active");
                     }
 
-                    // إخفاء جميع صفحات المحتوى
                     elements.pageContents.forEach(content => content.classList.add("hidden"));
                     const targetPage = $(`#${pageId}`);
                     if (targetPage) {
                         targetPage.classList.remove("hidden");
                     }
-
-                    // إغلاق القائمة عند اختيار رابط في وضع الموبايل
-                    if (window.innerWidth <= 992 && elements.sidebar.classList.contains("open")) {
-                        this.toggleSidebar();
-                    }
                 },
 
-                // --- وظائف عرض البيانات (Render) ---
                 updateStats() {
                     elements.totalActivations.textContent = db.activations.length;
                     elements.usedKeys.textContent = db.keys.filter(k => k.used).length;
@@ -1219,14 +1154,12 @@
                     }
                     if (target.classList.contains("btn-delete")) {
                         if (confirm("هل أنت متأكد من رغبتك في حذف هذا المنتج؟")) {
-                            // تحقق مما إذا كان المنتج مرتبطًا بمفاتيح مستخدمة
                             const hasUsedKeys = db.keys.some(key => key.productId === id && key.used);
                             if (hasUsedKeys) {
                                 alert("لا يمكن حذف المنتج لأنه مرتبط بمفاتيح مستخدمة.");
                                 return;
                             }
                             db.products = db.products.filter(p => p.id !== id);
-                            // حذف المفاتيح غير المستخدمة المرتبطة بالمنتج المحذوف
                             db.keys = db.keys.filter(key => key.productId !== id || key.used);
                             this.renderProducts();
                             this.updateStats();
@@ -1238,7 +1171,7 @@
                 handleAddProduct(e) {
                     e.preventDefault();
                     const newProduct = {
-                        id: Date.now(), // استخدام timestamp كمعرف فريد
+                        id: Date.now(),
                         name: $("#productName").value,
                         version: $("#productVersion").value,
                         price: parseFloat($("#productPrice").value) || 0,
@@ -1261,10 +1194,10 @@
                     $("#editProductName").value = product.name;
                     $("#editProductVersion").value = product.version;
                     $("#editProductPrice").value = product.price;
-                    $("#editProductStatus").value = product.status.toString(); // تحويل إلى نص للمقارنة في select
+                    $("#editProductStatus").value = product.status.toString();
                     $("#editProductDescription").value = product.description;
 
-                    elements.editProductModal.classList.add("show"); // استخدام كلاس show للتحكم في ظهور المودال
+                    elements.editProductModal.classList.add("show");
                 },
 
                 closeEditModal() {
@@ -1278,7 +1211,7 @@
 
                     if (productIndex > -1) {
                         db.products[productIndex] = {
-                            ...db.products[productIndex], // للحفاظ على الخصائص الأخرى إن وجدت
+                            ...db.products[productIndex],
                             name: $("#editProductName").value,
                             version: $("#editProductVersion").value,
                             price: parseFloat($("#editProductPrice").value) || 0,
@@ -1295,7 +1228,6 @@
                     }
                 },
 
-                // --- وظائف إضافة المفاتيح ---
                 handleAddKeys(e) {
                     e.preventDefault();
                     const productId = parseInt(elements.keyProductSelect.value);
@@ -1310,12 +1242,12 @@
                     for (let i = 0; i < numberOfKeys; i++) {
                         const newKey = this.generateUniqueKey();
                         db.keys.push({
-                            id: Date.now() + i, // معرف فريد لكل مفتاح
+                            id: Date.now() + i,
                             key: newKey,
                             productId: productId,
                             used: false,
                             createdAt: new Date().toISOString().slice(0, 10),
-                            createdBy: "admin" // يمكن تغيير هذا ديناميكيًا
+                            createdBy: "admin"
                         });
                         generatedKeys.push(newKey);
                     }
@@ -1329,7 +1261,6 @@
                 },
 
                 generateUniqueKey() {
-                    // دالة بسيطة لتوليد مفتاح فريد (يمكن تحسينها)
                     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                     let result = "";
                     for (let i = 0; i < 3; i++) {
@@ -1347,9 +1278,47 @@
                     alert("تم نسخ المفاتيح إلى الحافظة!");
                 },
 
-                // --- وظائف مساعدة ---
+                populateProductSelects() {
+                    const options = db.products
+                        .filter(product => product.status)
+                        .map(product => `<option value="${product.id}">${product.name} (${product.version})</option>`)
+                        .join("");
+                    if (elements.keyProductSelect) elements.keyProductSelect.innerHTML = options;
+                },
+
+                renderActivations() {
+                    const searchTerm = elements.activationSearch ? elements.activationSearch.value.toLowerCase() : "";
+                    const filteredActivations = db.activations.filter(act =>
+                        act.activationKey.toLowerCase().includes(searchTerm)
+                    );
+
+                    if (filteredActivations.length === 0) {
+                        elements.activationsList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد نتائج مطابقة.</td></tr>`;
+                        return;
+                    }
+
+                    elements.activationsList.innerHTML = filteredActivations.map(act => {
+                        const product = db.products.find(p => p.id === act.productId);
+                        const user = db.users.find(u => u.id === act.userId);
+                        return `
+                            <tr>
+                                <td>${act.activationKey}</td>
+                                <td>${product ? product.name : "غير معروف"}</td>
+                                <td>${user ? user.name : act.userId}</td>
+                                <td>${act.deviceId}</td>
+                                <td>${act.date}</td>
+                                <td>
+                                    <span class="badge ${act.status === "ناجح" ? "badge-success" : "badge-danger"}">
+                                        ${act.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("");
+                },
+
                 showMessage(element, message, type = "success") {
-                    if (!element) return; // تأكد من وجود العنصر قبل التعديل
+                    if (!element) return;
                     element.className = `alert alert-${type}`;
                     element.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i> ${message}`;
                     element.classList.remove("hidden");
@@ -1359,9 +1328,6 @@
                 }
             };
 
-            // =================================================================
-            // 4. بدء تشغيل التطبيق
-            // =================================================================
             App.init();
 
         })();
