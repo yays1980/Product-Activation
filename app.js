@@ -444,38 +444,117 @@ app.get('/admin/keys', authenticateAdmin, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Failed to fetch keys" });
+app.post("/admin/keys", authenticateAdmin, async (req, res) => {
+  const { product_id, notes, count = 1 } = req.body;
+
+  if (!product_id) {
+    return res.status(400).json({ success: false, message: "Product ID is required" });
+  }
+  if (count < 1 || count > 100) { // Limit key generation count
+    return res.status(400).json({ success: false, message: "Key count must be between 1 and 100" });
+  }
+
+  try {
+    // ط§ظ„طھط­ظ‚ظ‚ ظ…ظ† ظˆط¬ظˆط¯ ط§ظ„ظ…ظ†طھط¬
+    const { data: product, error: productError } = await supabase
+      .from("products")
+      .select("name")
+      .eq("id", product_id)
+      .maybeSingle();
+
+    if (productError) throw productError;
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const generateKey = () => {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let result = "";
+      for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+      return result;
+    };
+
+    const keys = [];
+    for (let i = 0; i < count; i++) {
+      const key = `${generateKey()}-${generateKey()}-${generateKey()}`;
+      keys.push({
+        key_value: key,
+        product_id: product_id,
+        is_used: false,
+        created_by: req.user.email,
+        notes: notes || `ظ…ظپطھط§ط­ ظ„ظ€ ${product.name} - طھظ… ط¥ظ†ط´ط§ط¤ظ‡ ط¨ظˆط§ط³ط·ط© ${req.user.email}`
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("product_keys")
+      .insert(keys)
+      .select("id, key_value, product_id"); // Select specific fields to return
+
+    if (error) throw error;
+
+    res.status(201).json({
+      success: true,
+      message: `Generated ${data.length} key(s) successfully!`,
+      keys: data // Data already contains limited info due to .select()
+    });
+
+  } catch (err) {
+    console.error("Generate keys error:", err.message || err);
+    res.status(500).json({ success: false, message: "Failed to generate keys", details: err.message });
+  }
+});
+
+// ًں“ٹ ط§ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ط¬ظ…ظٹط¹ ط§ظ„ظ…ظپط§طھظٹط­
+app.get("/admin/keys", authenticateAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("product_keys")
+      .select(`
+        id, key_value, is_used, created_at, created_by,
+        products (name, version)
+      `)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    res.status(200).json({ success: true, keys: data });
+  } catch (err) {
+    console.error("Fetch keys error:", err.message || err);
+    res.status(500).json({ success: false, message: "Failed to fetch keys", details: err.message });
   }
 });
 
 // â‌Œ ط­ط°ظپ ظ…ظپطھط§ط­ (ط؛ظٹط± ظ…ط³طھط®ط¯ظ… ظپظ‚ط·)
-app.delete('/admin/keys/:key_value', authenticateAdmin, async (req, res) => {
+app.delete("/admin/keys/:key_value", authenticateAdmin, async (req, res) => {
   const { key_value } = req.params;
 
   try {
     const { data, error } = await supabase
-      .from('product_keys')
-      .select('is_used')
-      .eq('key_value', key_value)
-      .single();
+      .from("product_keys")
+      .select("is_used")
+      .eq("key_value", key_value)
+      .maybeSingle();
 
-    if (error) return res.status(404).json({ success: false, message: "Key not found" });
+    if (error) throw error;
+    if (!data) return res.status(404).json({ success: false, message: "Key not found" });
 
     if (data.is_used) {
       return res.status(400).json({ success: false, message: "Cannot delete used key" });
     }
 
     const { error: delError } = await supabase
-      .from('product_keys')
+      .from("product_keys")
       .delete()
-      .eq('key_value', key_value);
+      .eq("key_value", key_value);
 
     if (delError) throw delError;
 
-    res.json({ success: true, message: "Key deleted successfully!" });
+    res.status(200).json({ success: true, message: "Key deleted successfully!" });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to delete key" });
+    console.error("Delete key error:", err.message || err);
+    res.status(500).json({ success: false, message: "Failed to delete key", details: err.message });
   }
 });
 
