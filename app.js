@@ -516,7 +516,10 @@ app.get("/admin/keys", authenticateAdmin, async (req, res) => {
       `)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase query error in /admin/keys:", error.message);
+      throw error;
+    }
 
     res.status(200).json({ success: true, keys: data });
   } catch (err) {
@@ -524,7 +527,6 @@ app.get("/admin/keys", authenticateAdmin, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch keys", details: err.message });
   }
 });
-
 // â‌Œ ط­ط°ظپ ظ…ظپطھط§ط­ (ط؛ظٹط± ظ…ط³طھط®ط¯ظ… ظپظ‚ط·)
 app.delete("/admin/keys/:key_value", authenticateAdmin, async (req, res) => {
   const { key_value } = req.params;
