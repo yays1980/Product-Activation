@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم نظام التفعيل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* --- المتغيرات الرئيسية --- */
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
@@ -15,303 +17,427 @@
             --light: #f8f9fa;
             --dark: #212529;
             --gray: #6c757d;
+            --background: #f5f7fb;
+            --white: #ffffff;
+            --border-color: #dee2e6;
+
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition-speed: 0.3s;
         }
 
+        /* --- إعادة تعيين الأنماط الأساسية --- */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: #f5f7fb;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--dark);
             line-height: 1.6;
+            font-size: 16px;
         }
 
+        /* --- الحاوية الرئيسية --- */
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
 
-        /* تنسيق رأس الصفحة */
-        header {
+        /* --- رأس الصفحة --- */
+        .header {
             background: linear-gradient(120deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 100%;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-        }
-
-        .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .btn {
-            padding: 0.5rem 1rem;
+        .menu-toggle {
+            background: none;
             border: none;
-            border-radius: 4px;
+            color: var(--white);
+            font-size: 1.5rem;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
+            display: none; /* يظهر فقط في الشاشات الصغيرة */
         }
 
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary);
+        /* --- الأزرار --- */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
+        .btn-primary { background-color: var(--primary); color: var(--white); }
+        .btn-primary:hover { background-color: var(--secondary); transform: translateY(-2px); }
+        .btn-danger { background-color: var(--danger); color: var(--white); }
+        .btn-danger:hover { background-color: #d11466; transform: translateY(-2px); }
+        .btn-success { background-color: var(--success); color: var(--white); }
+        .btn-success:hover { background-color: #3aa5d3; transform: translateY(-2px); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.875rem; }
 
-        .btn-danger:hover {
-            background-color: #d11466;
-        }
-
-        /* تنسيق صفحة تسجيل الدخول */
+        /* --- صفحة تسجيل الدخول --- */
         .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
 
         .login-form {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             width: 100%;
             max-width: 400px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-form h2 {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        /* تنسيق لوحة التحكم */
+        /* --- لوحة التحكم --- */
         .dashboard {
             display: flex;
-            min-height: calc(100vh - 70px);
+            padding-top: var(--header-height);
         }
 
-        /* الشريط الجانبي */
+        /* --- الشريط الجانبي --- */
         .sidebar {
-            width: 250px;
-            background-color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem 0;
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            top: var(--header-height);
+            right: 0;
+            overflow-y: auto;
+            transition: transform var(--transition-speed) ease;
+            z-index: 999;
         }
 
         .sidebar-menu {
             list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 0.5rem;
+            padding-top: 1rem;
         }
 
         .sidebar-menu a {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--dark);
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.5rem;
+            color: var(--gray);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            border-right: 4px solid transparent;
+        }
+
+        .sidebar-menu a i {
+            margin-left: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
         }
 
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background-color: rgba(67, 97, 238, 0.1);
+            background-color: rgba(67, 97, 238, 0.08);
             color: var(--primary);
-            border-right: 3px solid var(--primary);
+            border-right-color: var(--primary);
         }
 
-        /* المحتوى الرئيسي */
+        /* --- المحتوى الرئيسي --- */
         .main-content {
             flex: 1;
-            padding: 1.5rem;
+            padding: 2rem;
+            margin-right: var(--sidebar-width);
+            transition: margin-right var(--transition-speed) ease;
         }
 
         .page-title {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* الكروت الإحصائية */
+        /* --- الكروت الإحصائية --- */
         .stats-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
-            border-radius: 8px;
+            background: var(--white);
+            border-radius: var(--border-radius);
             padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            text-align: center;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
         }
 
-        .stat-card h3 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
             color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
         }
 
-        .stat-card p {
+        .stat-card .info h3 {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .stat-card .info p {
             color: var(--gray);
+            font-size: 0.9rem;
         }
 
-        /* الجداول */
+        /* --- البطاقات والجداول --- */
         .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             margin-bottom: 1.5rem;
             overflow: hidden;
         }
 
         .card-header {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .card-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .card-body {
             padding: 1.5rem;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 700px;
         }
 
-        table th,
-        table td {
-            padding: 0.75rem 1rem;
+        table th, table td {
+            padding: 1rem;
             text-align: right;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
         }
 
         table th {
-            background-color: #f8f9fa;
+            background-color: var(--light);
             font-weight: 600;
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
         }
 
-        table tr:hover {
-            background-color: #f8f9fa;
+        table tbody tr:hover {
+            background-color: var(--light);
         }
 
-        /* النماذج */
+        /* --- النماذج --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
         .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -0.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
-        .form-col {
-            flex: 1;
-            padding: 0 0.5rem;
+        /* --- عناصر أخرى --- */
+        .badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background-color: rgba(76, 201, 240, 0.2); color: #0077b6; }
+        .badge-danger { background-color: rgba(247, 37, 133, 0.15); color: #f72585; }
+        .badge-warning { background-color: rgba(248, 150, 30, 0.15); color: #f8961e; }
+
+        .hidden { display: none !important; }
+
+        /* --- البحث --- */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-right: 40px;
             min-width: 250px;
         }
 
-        /* الحالة والتخصيصات */
-        .badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
         }
 
-        .badge-success {
-            background-color: rgba(76, 201, 240, 0.1);
-            color: #4cc9f0;
+        /* --- التصميم المتجاوب (Responsive) --- */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%); /* إخفاء الشريط الجانبي خارج الشاشة */
+            }
+
+            .sidebar.open {
+                transform: translateX(0); /* إظهار الشريط الجانبي */
+                box-shadow: var(--box-shadow);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+            
+            /* طبقة داكنة عند فتح القائمة */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.4);
+                z-index: 998;
+                display: none;
+            }
+            .overlay.show {
+                display: block;
+            }
         }
 
-        .badge-danger {
-            background-color: rgba(247, 37, 133, 0.1);
-            color: #f72585;
-        }
-
-        .badge-warning {
-            background-color: rgba(248, 150, 30, 0.1);
-            color: #f8961e;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-3 {
-            margin-top: 1rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* رسائل التنبيه */
-        .alert {
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-        }
-
-        .alert-success {
-            background-color: rgba(76, 201, 240, 0.1);
-            color: #4cc9f0;
-            border: 1px solid rgba(76, 201, 240, 0.2);
-        }
-
-        .alert-error {
-            background-color: rgba(247, 37, 133, 0.1);
-            color: #f72585;
-            border: 1px solid rgba(247, 37, 133, 0.2);
+        @media (max-width: 768px) {
+            .header-content .user-info span {
+                display: none; /* إخفاء اسم المشرف في الشاشات الصغيرة */
+            }
+            .stats-cards {
+                grid-template-columns: 1fr; /* كرت واحد في كل سطر */
+            }
+            .page-title {
+                font-size: 1.5rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -319,9 +445,9 @@
     <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="login-container">
         <div class="login-form">
-            <h2>تسجيل دخول المشرفين</h2>
+            <h2><i class="fas fa-lock"></i> تسجيل دخول المشرفين</h2>
             <div id="loginMessage"></div>
-            <form id="loginForm">
+            <form id="loginForm" action="#">
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني</label>
                     <input type="email" id="email" required>
@@ -330,92 +456,94 @@
                     <label for="password">كلمة المرور</label>
                     <input type="password" id="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">تسجيل الدخول</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
             </form>
         </div>
     </div>
 
     <!-- لوحة التحكم -->
     <div id="dashboardPage" class="hidden">
-        <header>
+        <header class="header">
             <div class="container header-content">
-                <div class="logo">نظام التفعيل السحابي</div>
+                <div class="logo">
+                    <button id="menuToggle" class="menu-toggle" aria-label="فتح القائمة"><i class="fas fa-bars"></i></button>
+                    <i class="fas fa-key"></i>
+                    <span>نظام التفعيل</span>
+                </div>
                 <div class="user-info">
-                    <span id="adminName">المشرف</span>
-                    <button id="logoutBtn" class="btn btn-danger">تسجيل الخروج</button>
+                    <span id="adminName">أهلاً، مشرف</span>
+                    <button id="logoutBtn" class="btn btn-danger btn-sm">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>خروج</span>
+                    </button>
                 </div>
             </div>
         </header>
 
         <div class="dashboard">
-            <!-- الشريط الجانبي -->
-            <div class="sidebar">
+            <nav class="sidebar" id="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="#" class="active" data-page="dashboard">لوحة التحكم</a></li>
-                    <li><a href="#" data-page="keys">إدارة المفاتيح</a></li>
-                    <li><a href="#" data-page="activations">التفعيلات</a></li>
-                    <li><a href="#" data-page="reports">التقارير</a></li>
-                    <li><a href="#" data-page="addKey">إضافة مفتاح جديد</a></li>
-                    <li><a href="#" data-page="products">إدارة المنتجات</a></li>
+                    <li><a href="#dashboard" class="nav-link active" data-page="dashboardContent"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a></li>
+                    <li><a href="#keys" class="nav-link" data-page="keysContent"><i class="fas fa-key"></i> إدارة المفاتيح</a></li>
+                    <li><a href="#products" class="nav-link" data-page="productsContent"><i class="fas fa-box"></i> إدارة المنتجات</a></li>
+                    <li><a href="#activations" class="nav-link" data-page="activationsContent"><i class="fas fa-check-circle"></i> التفعيلات</a></li>
+                    <li><a href="#reports" class="nav-link" data-page="reportsContent"><i class="fas fa-chart-bar"></i> التقارير</a></li>
+                    <li><a href="#addKey" class="nav-link" data-page="addKeyContent"><i class="fas fa-plus-circle"></i> إضافة مفتاح</a></li>
+                    <li><a href="#addProduct" class="nav-link" data-page="addProductContent"><i class="fas fa-plus-circle"></i> إضافة منتج</a></li>
                 </ul>
-            </div>
+            </nav>
+            
+            <div class="overlay" id="overlay"></div>
 
-            <!-- المحتوى الرئيسي -->
-            <div class="main-content">
-                <!-- صفحة الإحصائيات -->
-                <div id="dashboardContent" class="page-content">
-                    <h2 class="page-title">لوحة التحكم</h2>
-                    
+            <main class="main-content">
+                <!-- محتوى لوحة التحكم -->
+                <section id="dashboardContent" class="page-content">
+                    <h2 class="page-title"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
                     <div class="stats-cards">
+                        <!-- تم تعديل هيكل الكروت -->
                         <div class="stat-card">
-                            <h3 id="totalActivations">0</h3>
-                            <p>إجمالي التفعيلات</p>
+                            <div class="icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="info">
+                                <h3 id="totalActivations">1,250</h3>
+                                <p>إجمالي التفعيلات</p>
+                            </div>
                         </div>
                         <div class="stat-card">
-                            <h3 id="usedKeys">0</h3>
-                            <p>المفاتيح المستخدمة</p>
+                            <div class="icon"><i class="fas fa-key"></i></div>
+                            <div class="info">
+                                <h3 id="usedKeys">800</h3>
+                                <p>المفاتيح المستخدمة</p>
+                            </div>
                         </div>
                         <div class="stat-card">
-                            <h3 id="unusedKeys">0</h3>
-                            <p>المفاتيح المتاحة</p>
+                            <div class="icon"><i class="fas fa-key"></i></div>
+                            <div class="info">
+                                <h3 id="unusedKeys">450</h3>
+                                <p>المفاتيح المتاحة</p>
+                            </div>
                         </div>
                         <div class="stat-card">
-                            <h3 id="totalProducts">0</h3>
-                            <p>عدد المنتجات</p>
+                            <div class="icon"><i class="fas fa-box"></i></div>
+                            <div class="info">
+                                <h3 id="totalProducts">15</h3>
+                                <p>عدد المنتجات</p>
+                            </div>
                         </div>
                     </div>
+                    <!-- بقية المحتوى هنا -->
+                </section>
 
+                <!-- محتوى إدارة المفاتيح -->
+                <section id="keysContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-key"></i> إدارة المفاتيح</h2>
                     <div class="card">
                         <div class="card-header">
-                            <h3>آخر التفعيلات</h3>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>المنتج</th>
-                                        <th>معرف الجهاز</th>
-                                        <th>تاريخ التفعيل</th>
-                                        <th>الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentActivations">
-                                    <!-- سيتم ملؤها بالبيانات -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- صفحة إدارة المفاتيح -->
-                <div id="keysContent" class="page-content hidden">
-                    <h2 class="page-title">إدارة المفاتيح</h2>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>جميع المفاتيح</h3>
-                            <div>
+                            <h3><i class="fas fa-list"></i> جميع المفاتيح</h3>
+                            <div class="search-box">
                                 <input type="text" id="keySearch" placeholder="بحث في المفاتيح...">
+                                <i class="fas fa-search"></i>
                             </div>
                         </div>
                         <div class="card-body">
@@ -426,569 +554,342 @@
                                         <th>المنتج</th>
                                         <th>الحالة</th>
                                         <th>تاريخ الإنشاء</th>
-                                        <th>أنشئ بواسطة</th>
                                         <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody id="keysList">
-                                    <!-- سيتم ملؤها بالبيانات -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- صفحة التفعيلات -->
-                <div id="activationsContent" class="page-content hidden">
-                    <h2 class="page-title">التفعيلات</h2>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>سجل التفعيلات</h3>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <thead>
                                     <tr>
-                                        <th>المستخدم</th>
-                                        <th>المنتج</th>
-                                        <th>معرف الجهاز</th>
-                                        <th>مفتاح التفعيل</th>
-                                        <th>تاريخ التفعيل</th>
-                                        <th>الحالة</th>
+                                        <td>ABC-123-DEF-456</td>
+                                        <td>المنتج أ</td>
+                                        <td><span class="badge badge-success">متاح</span></td>
+                                        <td>2023-10-27</td>
+                                        <td><button class="btn btn-danger btn-sm">حذف</button></td>
                                     </tr>
-                                </thead>
-                                <tbody id="activationsList">
-                                    <!-- سيتم ملؤها بالبيانات -->
+                                    <tr>
+                                        <td>XYZ-789-GHI-012</td>
+                                        <td>المنتج ب</td>
+                                        <td><span class="badge badge-danger">مستخدم</span></td>
+                                        <td>2023-10-26</td>
+                                        <td><button class="btn btn-danger btn-sm" disabled>حذف</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
+                
+                <!-- بقية أقسام المحتوى (products, activations, etc.) تتبع نفس النمط -->
 
-                <!-- صفحة التقارير --><!-- صفحة إدارة المنتجات -->
-<div id="productsContent" class="page-content hidden">
-  <h2 class="page-title">إدارة المنتجات</h2>
-  
-  <div class="card">
-    <div class="card-header">
-      <h3>قائمة المنتجات</h3>
-      <button id="addProductBtn" class="btn btn-primary">إضافة منتج جديد</button>
-    </div>
-    <div class="card-body">
-      <table>
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>الإصدار</th>
-            <th>السعر</th>
-            <th>الحالة</th>
-            <th>الإجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="productsList">
-          <!-- سيتم ملؤها بالبيانات -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- نموذج إضافة منتج -->
-<div id="addProductModal" class="modal hidden">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>إضافة منتج جديد</h3>
-      <span class="close">&times;</span>
-    </div>
-    <div class="modal-body">
-      <div id="productMessage"></div>
-      <form id="addProductForm">
-        <div class="form-group">
-          <label for="productName">اسم المنتج *</label>
-          <input type="text" id="productName" required>
-        </div>
-        <div class="form-group">
-          <label for="productVersion">الإصدار</label>
-          <input type="text" id="productVersion" value="1.0">
-        </div>
-        <div class="form-group">
-          <label for="productPrice">السعر</label>
-          <input type="number" id="productPrice" min="0" step="0.01">
-        </div>
-        <div class="form-group">
-          <label for="productDescription">الوصف</label>
-          <textarea id="productDescription" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">حفظ المنتج</button>
-      </form>
-    </div>
-  </div>
-</div>
-                <div id="reportsContent" class="page-content hidden">
-                    <h2 class="page-title">التقارير والإحصائيات</h2>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>تقارير التفعيل</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <div class="form-group">
-                                        <label>من تاريخ</label>
-                                        <input type="date" id="reportFromDate">
-                                    </div>
-                                </div>
-                                <div class="form-col">
-                                    <div class="form-group">
-                                        <label>إلى تاريخ</label>
-                                        <input type="date" id="reportToDate">
-                                    </div>
-                                </div>
-                                <div class="form-col">
-                                    <div class="form-group">
-                                        <label>المنتج</label>
-                                        <select id="reportProduct">
-                                            <option value="">جميع المنتجات</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-col">
-                                    <label>&nbsp;</label>
-                                    <button id="generateReportBtn" class="btn btn-primary">إنشاء التقرير</button>
-                                </div>
-                            </div>
-
-                            <div id="reportResults" class="mt-3">
-                                <!-- سيتم عرض نتائج التقرير هنا -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- صفحة إضافة مفتاح جديد -->
-                <div id="addKeyContent" class="page-content hidden">
-                    <h2 class="page-title">إضافة مفتاح جديد</h2>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>إنشاء مفاتيح جديدة</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="addKeyMessage"></div>
-                            <form id="addKeyForm">
-                                <div class="form-row">
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="productName">اسم المنتج</label>
-                                            <input type="text" id="productName" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-col">
-                                        <div class="form-group">
-                                            <label for="keyCount">عدد المفاتيح</label>
-                                            <input type="number" id="keyCount" value="1" min="1" max="100" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="keyNotes">ملاحظات (اختياري)</label>
-                                    <textarea id="keyNotes" rows="3"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">إنشاء المفاتيح</button>
-                            </form>
-
-                            <div id="generatedKeys" class="mt-3 hidden">
-                                <h4>المفاتيح المنشورة:</h4>
-                                <div class="alert alert-success">
-                                    تم إنشاء المفاتيح بنجاح! يمكنك نسخها الآن.
-                                </div>
-                                <textarea id="keysOutput" rows="5" style="width: 100%;"></textarea>
-                                <button id="copyKeysBtn" class="btn btn-primary mt-3">نسخ المفاتيح</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
 
     <script>
-        // المتغيرات العامة
-        let authToken = null;
-        let currentAdmin = null;
-        const API_BASE_URL = 'http://localhost:5000'; // تغيير هذا إذا كان الAPI على خادم آخر
+        // --- كود JavaScript أساسي لتفعيل لوحة التحكم ---
+        // نستخدم IIFE لإنشاء نطاق خاص بالكود وتجنب تلويث النطاق العام
+(function() {
+    'use strict';
 
-        // عناصر DOM
-        const loginPage = document.getElementById('loginPage');
-        const dashboardPage = document.getElementById('dashboardPage');
-        const loginForm = document.getElementById('loginForm');
-        const loginMessage = document.getElementById('loginMessage');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const adminName = document.getElementById('adminName');
+    // =================================================================
+    // 1. محاكاة قاعدة البيانات (Mock Data)
+    // في تطبيق حقيقي، هذه البيانات ستأتي من الخادم (API)
+    // =================================================================
+    let db = {
+        products: [
+            { id: 1, name: 'برنامج المحاسبة', version: '2.5', price: 500, status: true, description: 'برنامج لإدارة الحسابات والمخزون' },
+            { id: 2, name: 'أداة التصميم', version: '1.0', price: 150, status: true, description: 'أداة لتصميم الرسومات' },
+            { id: 3, name: 'نظام إدارة العملاء', version: '3.1', price: 1200, status: false, description: 'نظام متكامل لإدارة علاقات العملاء' },
+        ],
+        keys: [
+            { id: 1, key: 'ABC-123-DEF-456', productId: 1, used: false, createdAt: '2025-09-15', createdBy: 'admin' },
+            { id: 2, key: 'GHI-789-JKL-012', productId: 2, used: true, createdAt: '2025-09-14', createdBy: 'admin' },
+            { id: 3, key: 'MNO-345-PQR-678', productId: 1, used: false, createdAt: '2025-09-16', createdBy: 'admin' },
+        ],
+        activations: [
+            { id: 1, userId: 101, productId: 2, deviceId: 'DEV-A1B2', activationKey: 'GHI-789-JKL-012', date: '2025-09-15', status: 'ناجح' },
+        ],
+        users: [
+            { id: 101, name: 'أحمد محمد' }
+        ]
+    };
+
+    // =================================================================
+    // 2. اختيار عناصر DOM الرئيسية
+    // =================================================================
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
+
+    const elements = {
+        loginPage: $('#loginPage'),
+        dashboardPage: $('#dashboardPage'),
+        loginForm: $('#loginForm'),
+        logoutBtn: $('#logoutBtn'),
         
-        // عناصر الصفحات
-        const pageLinks = document.querySelectorAll('.sidebar-menu a');
-        const pageContents = document.querySelectorAll('.page-content');
+        sidebar: $('#sidebar'),
+        menuToggle: $('#menuToggle'),
+        overlay: $('#overlay'),
+        navLinks: $$('.nav-link'),
+        pageContents: $$('.page-content'),
 
-        // تسجيل الدخول
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    authToken = data.token;
-                    currentAdmin = data.user;
-                    
-                    // حفظ التوكن في localStorage
-                    localStorage.setItem('adminToken', authToken);
-                    localStorage.setItem('adminData', JSON.stringify(currentAdmin));
-                    
-                    // تحديث واجهة المستخدم
-                    adminName.textContent = currentAdmin.name || currentAdmin.email;
-                    
-                    // إظهار لوحة التحكم وإخفاء صفحة التسجيل
-                    loginPage.classList.add('hidden');
-                    dashboardPage.classList.remove('hidden');
-                    
-                    // تحميل البيانات الأولية
-                    loadDashboardData();
-                } else {
-                    showMessage(loginMessage, data.message, 'error');
-                }
-            } catch (error) {
-                showMessage(loginMessage, 'خطأ في الاتصال بالخادم', 'error');
-                console.error('Login error:', error);
+        // الإحصائيات
+        totalActivations: $('#totalActivations'),
+        usedKeys: $('#usedKeys'),
+        unusedKeys: $('#unusedKeys'),
+        totalProducts: $('#totalProducts'),
+
+        // المفاتيح
+        keysList: $('#keysList'),
+        keySearch: $('#keySearch'),
+
+        // المنتجات
+        productsList: $('#productsList'),
+        addProductBtn: $('#addProductBtn'), // الزر في صفحة إدارة المنتجات
+        addProductForm: $('#addProductForm'),
+        addProductMessage: $('#addProductMessage'),
+
+        // تعديل المنتج (Modal)
+        editProductModal: $('#editProductModal'),
+        editProductForm: $('#editProductForm'),
+        editProductMessage: $('#editProductMessage'),
+        closeModalBtn: $('.modal .close'),
+    };
+
+    // =================================================================
+    // 3. الدوال الرئيسية للتطبيق
+    // =================================================================
+    const App = {
+        init() {
+            // ربط الأحداث عند بدء تشغيل التطبيق
+            this.bindEvents();
+            // تحقق مما إذا كان المستخدم قد سجل الدخول بالفعل (باستخدام localStorage)
+            if (localStorage.getItem('isLoggedIn')) {
+                this.showDashboard();
             }
-        });
+        },
 
-        // تسجيل الخروج
-        logoutBtn.addEventListener('click', () => {
-            authToken = null;
-            currentAdmin = null;
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminData');
+        bindEvents() {
+            elements.loginForm.addEventListener('submit', this.handleLogin.bind(this));
+            elements.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
+            elements.menuToggle.addEventListener('click', this.toggleSidebar.bind(this));
+            elements.overlay.addEventListener('click', this.toggleSidebar.bind(this));
             
-            dashboardPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-            
-            // إعادة تعيين نموذج التسجيل
-            loginForm.reset();
-        });
-
-        // التنقل بين الصفحات
-        pageLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // إزالة النشاط من جميع الروابط
-                pageLinks.forEach(l => l.classList.remove('active'));
-                // إضافة النشاط للرابط الحالي
-                link.classList.add('active');
-                
-                // إخفاء جميع المحتويات
-                pageContents.forEach(content => content.classList.add('hidden'));
-                
-                // إظهار المحتوى المحدد
-                const pageId = link.getAttribute('data-page');
-                document.getElementById(`${pageId}Content`).classList.remove('hidden');
-                
-                // تحميل بيانات الصفحة إذا لزم الأمر
-                if (pageId === 'keys') {
-                    loadKeys();
-                } else if (pageId === 'activations') {
-                    loadActivations();
-                } else if (pageId === 'dashboard') {
-                    loadDashboardData();
-                }
+            elements.navLinks.forEach(link => {
+                link.addEventListener('click', this.handlePageNavigation.bind(this));
             });
-        });
 
-        // تحميل بيانات لوحة التحكم
-        async function loadDashboardData() {
-            try {
-                // تحميل الإحصائيات
-                const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                if (statsResponse.ok) {
-                    const statsData = await statsResponse.json();
-                    if (statsData.success) {
-                        document.getElementById('totalActivations').textContent = statsData.stats.total_activations;
-                        document.getElementById('usedKeys').textContent = statsData.stats.used_keys;
-                        document.getElementById('unusedKeys').textContent = statsData.stats.unused_keys;
-                        document.getElementById('totalProducts').textContent = statsData.stats.total_products;
-                    }
-                }
-                
-                // تحميل آخر التفعيلات
-                const activationsResponse = await fetch(`${API_BASE_URL}/admin/activations?limit=5`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                if (activationsResponse.ok) {
-                    const activationsData = await activationsResponse.json();
-                    const activationsList = document.getElementById('recentActivations');
-                    
-                    if (activationsData.success && activationsData.activations.length > 0) {
-                        activationsList.innerHTML = activationsData.activations.map(activation => `
-                            <tr>
-                                <td>${activation.product_name}</td>
-                                <td>${activation.device_id}</td>
-                                <td>${new Date(activation.activated_at).toLocaleDateString('ar-EG')}</td>
-                                <td><span class="badge badge-success">نشط</span></td>
-                            </tr>
-                        `).join('');
-                    } else {
-                        activationsList.innerHTML = '<tr><td colspan="4" class="text-center">لا توجد تفعيلات</td></tr>';
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-            }
-        }
+            elements.keySearch.addEventListener('input', this.renderKeys.bind(this));
+            elements.productsList.addEventListener('click', this.handleProductActions.bind(this));
+            elements.addProductForm.addEventListener('submit', this.handleAddProduct.bind(this));
+            elements.editProductForm.addEventListener('submit', this.handleEditProduct.bind(this));
+            elements.closeModalBtn.addEventListener('click', this.closeEditModal.bind(this));
+        },
 
-        // تحميل المفاتيح// تحميل المنتجات
-async function loadProducts() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/products`, {
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      const productsList = document.getElementById('productsList');
-      
-      if (data.success && data.products.length > 0) {
-        productsList.innerHTML = data.products.map(product => `
-          <tr>
-            <td>${product.name}</td>
-            <td>${product.version}</td>
-            <td>${product.price} ر.س</td>
-            <td>
-              <span class="badge ${product.is_active ? 'badge-success' : 'badge-danger'}">
-                ${product.is_active ? 'نشط' : 'غير نشط'}
-              </span>
-            </td>
-            <td>
-              <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})">تعديل</button>
-              <button class="btn btn-danger btn-sm" onclick="toggleProduct(${product.id}, ${!product.is_active})">
-                ${product.is_active ? 'تعطيل' : 'تفعيل'}
-              </button>
-            </td>
-          </tr>
-        `).join('');
-      } else {
-        productsList.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد منتجات</td></tr>';
-      }
-    }
-  } catch (error) {
-    console.error('Error loading products:', error);
-  }
-}
-        async function loadKeys() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/keys`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    const keysList = document.getElementById('keysList');
-                    
-                    if (data.success && data.keys.length > 0) {
-                        keysList.innerHTML = data.keys.map(key => `
-                            <tr>
-                                <td>${key.key_value}</td>
-                                <td>${key.product_name}</td>
-                                <td>
-                                    <span class="badge ${key.is_used ? 'badge-danger' : 'badge-success'}">
-                                        ${key.is_used ? 'مستخدم' : 'غير مستخدم'}
-                                    </span>
-                                </td>
-                                <td>${new Date(key.created_at).toLocaleDateString('ar-EG')}</td>
-                                <td>${key.created_by}</td>
-                                <td>
-                                    ${!key.is_used ? `
-                                        <button class="btn btn-danger btn-sm" onclick="deleteKey('${key.key_value}')">حذف</button>
-                                    ` : ''}
-                                </td>
-                            </tr>
-                        `).join('');
-                    } else {
-                        keysList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد مفاتيح</td></tr>';
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading keys:', error);
-            }
-        }
-
-        // تحميل التفعيلات
-        async function loadActivations() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/activations`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    const activationsList = document.getElementById('activationsList');
-                    
-                    if (data.success && data.activations.length > 0) {
-                        activationsList.innerHTML = data.activations.map(activation => `
-                            <tr>
-                                <td>${activation.user_email || 'مجهول'}</td>
-                                <td>${activation.product_name}</td>
-                                <td>${activation.device_id}</td>
-                                <td>${activation.key_value}</td>
-                                <td>${new Date(activation.activated_at).toLocaleDateString('ar-EG')}</td>
-                                <td><span class="badge badge-success">نشط</span></td>
-                            </tr>
-                        `).join('');
-                    } else {
-                        activationsList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد تفعيلات</td></tr>';
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading activations:', error);
-            }
-        }
-
-        // إضافة مفتاح جديد
-        document.getElementById('addKeyForm').addEventListener('submit', async (e) => {
+        // --- وظائف المصادقة والتنقل ---
+        handleLogin(e) {
             e.preventDefault();
-            
-            const productName = document.getElementById('productName').value;
-            const keyCount = document.getElementById('keyCount').value;
-            const notes = document.getElementById('keyNotes').value;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/keys`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({
-                        product_name: productName,
-                        notes: notes,
-                        count: parseInt(keyCount)
-                    })
-                });
-                
-                const data = await response.json();
-                const addKeyMessage = document.getElementById('addKeyMessage');
-                
-                if (data.success) {
-                    showMessage(addKeyMessage, data.message, 'success');
-                    
-                    // عرض المفاتيح المنشأة
-                    document.getElementById('generatedKeys').classList.remove('hidden');
-                    document.getElementById('keysOutput').value = data.keys.map(k => k.key_value).join('\n');
-                    
-                    // إعادة تعيين النموذج
-                    document.getElementById('addKeyForm').reset();
-                } else {
-                    showMessage(addKeyMessage, data.message, 'error');
-                }
-            } catch (error) {
-                const addKeyMessage = document.getElementById('addKeyMessage');
-                showMessage(addKeyMessage, 'خطأ في الاتصال بالخادم', 'error');
-                console.error('Error adding key:', error);
+            // في تطبيق حقيقي، سترسل طلبًا إلى الخادم هنا
+            // للتبسيط، نعتبر أي إدخال صحيحًا
+            localStorage.setItem('isLoggedIn', 'true');
+            this.showDashboard();
+        },
+
+        handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            elements.loginPage.classList.remove('hidden');
+            elements.dashboardPage.classList.add('hidden');
+        },
+
+        showDashboard() {
+            elements.loginPage.classList.add('hidden');
+            elements.dashboardPage.classList.remove('hidden');
+            // عرض الصفحة الافتراضية (لوحة التحكم)
+            this.navigateTo('dashboardContent');
+            this.updateStats();
+            this.renderKeys();
+            this.renderProducts();
+        },
+
+        toggleSidebar() {
+            elements.sidebar.classList.toggle('open');
+            elements.overlay.classList.toggle('show');
+        },
+
+        handlePageNavigation(e) {
+            e.preventDefault();
+            const link = e.currentTarget;
+            const pageId = link.getAttribute('data-page');
+            this.navigateTo(pageId, link);
+        },
+        
+        navigateTo(pageId, activeLink = null) {
+            // تحديث الرابط النشط
+            elements.navLinks.forEach(nav => nav.classList.remove('active'));
+            if (activeLink) {
+                activeLink.classList.add('active');
+            } else {
+                // إذا لم يتم توفير رابط، ابحث عنه
+                $(`.nav-link[data-page="${pageId}"]`).classList.add('active');
             }
-        });
 
-        // نسخ المفاتيح
-        document.getElementById('copyKeysBtn').addEventListener('click', () => {
-            const keysOutput = document.getElementById('keysOutput');
-            keysOutput.select();
-            document.execCommand('copy');
-            alert('تم نسخ المفاتيح إلى الحافظة');
-        });
+            // إظهار المحتوى المناسب
+            elements.pageContents.forEach(content => content.classList.add('hidden'));
+            $(`#${pageId}`).classList.remove('hidden');
 
-        // حذف مفتاح
-        async function deleteKey(keyValue) {
-            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا المفتاح؟')) return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/keys/${keyValue}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    alert('تم حذف المفتاح بنجاح');
-                    loadKeys(); // إعادة تحميل قائمة المفاتيح
-                } else {
-                    alert('فشل في حذف المفتاح: ' + data.message);
-                }
-            } catch (error) {
-                console.error('Error deleting key:', error);
-                alert('خطأ في الاتصال بالخادم');
+            // إغلاق القائمة الجانبية على الهواتف
+            if (window.innerWidth <= 992 && elements.sidebar.classList.contains('open')) {
+                this.toggleSidebar();
             }
-        }
+        },
 
-        // عرض الرسائل
-        function showMessage(element, message, type) {
-            element.innerHTML = `
-                <div class="alert alert-${type}">
-                    ${message}
-                </div>
-            `;
-            
-            // إخفاء الرسالة بعد 5 ثوان
+        // --- وظائف عرض البيانات (Render) ---
+        updateStats() {
+            elements.totalActivations.textContent = db.activations.length;
+            elements.usedKeys.textContent = db.keys.filter(k => k.used).length;
+            elements.unusedKeys.textContent = db.keys.filter(k => !k.used).length;
+            elements.totalProducts.textContent = db.products.length;
+        },
+
+        renderKeys() {
+            const searchTerm = elements.keySearch.value.toLowerCase();
+            const filteredKeys = db.keys.filter(k => k.key.toLowerCase().includes(searchTerm));
+
+            if (filteredKeys.length === 0) {
+                elements.keysList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد مفاتيح تطابق بحثك.</td></tr>`;
+                return;
+            }
+
+            elements.keysList.innerHTML = filteredKeys.map(key => {
+                const product = db.products.find(p => p.id === key.productId);
+                return `
+                    <tr>
+                        <td>${key.key}</td>
+                        <td>${product ? product.name : 'غير معروف'}</td>
+                        <td>
+                            <span class="badge ${key.used ? 'badge-danger' : 'badge-success'}">
+                                ${key.used ? 'مستخدم' : 'متاح'}
+                            </span>
+                        </td>
+                        <td>${key.createdAt}</td>
+                        <td>${key.createdBy}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-id="${key.id}" ${key.used ? 'disabled' : ''}>حذف</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        },
+
+        renderProducts() {
+            elements.productsList.innerHTML = db.products.map(product => `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${product.version}</td>
+                    <td>${product.price} ر.س</td>
+                    <td>
+                        <span class="badge ${product.status ? 'badge-success' : 'badge-danger'}">
+                            ${product.status ? 'نشط' : 'غير نشط'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm btn-edit" data-id="${product.id}">تعديل</button>
+                        <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}">حذف</button>
+                    </td>
+                </tr>
+            `).join('');
+        },
+
+        // --- وظائف إدارة المنتجات ---
+        handleProductActions(e) {
+            const target = e.target;
+            const id = parseInt(target.dataset.id);
+
+            if (target.classList.contains('btn-edit')) {
+                this.openEditModal(id);
+            }
+            if (target.classList.contains('btn-delete')) {
+                if (confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج؟')) {
+                    db.products = db.products.filter(p => p.id !== id);
+                    this.renderProducts();
+                    this.updateStats();
+                }
+            }
+        },
+
+        handleAddProduct(e) {
+            e.preventDefault();
+            const newProduct = {
+                id: Date.now(), // استخدام timestamp كمعرف فريد
+                name: $('#productName').value,
+                version: $('#productVersion').value,
+                price: parseFloat($('#productPrice').value) || 0,
+                status: $('#productStatus').value === 'true',
+                description: $('#productDescription').value,
+            };
+            db.products.push(newProduct);
+            this.renderProducts();
+            this.updateStats();
+            this.showMessage(elements.addProductMessage, 'تمت إضافة المنتج بنجاح!', 'success');
+            e.target.reset();
+        },
+
+        openEditModal(id) {
+            const product = db.products.find(p => p.id === id);
+            if (!product) return;
+
+            $('#editProductId').value = product.id;
+            $('#editProductName').value = product.name;
+            $('#editProductVersion').value = product.version;
+            $('#editProductPrice').value = product.price;
+            $('#editProductStatus').value = product.status;
+            $('#editProductDescription').value = product.description;
+
+            elements.editProductModal.classList.remove('hidden');
+        },
+
+        closeEditModal() {
+            elements.editProductModal.classList.add('hidden');
+        },
+
+        handleEditProduct(e) {
+            e.preventDefault();
+            const id = parseInt($('#editProductId').value);
+            const productIndex = db.products.findIndex(p => p.id === id);
+
+            if (productIndex > -1) {
+                db.products[productIndex] = {
+                    id: id,
+                    name: $('#editProductName').value,
+                    version: $('#editProductVersion').value,
+                    price: parseFloat($('#editProductPrice').value) || 0,
+                    status: $('#editProductStatus').value === 'true',
+                    description: $('#editProductDescription').value,
+                };
+                this.renderProducts();
+                this.showMessage(elements.editProductMessage, 'تم تحديث المنتج بنجاح!', 'success');
+                setTimeout(() => this.closeEditModal(), 1500);
+            } else {
+                this.showMessage(elements.editProductMessage, 'حدث خطأ أثناء التحديث.', 'error');
+            }
+        },
+        
+        // --- وظائف مساعدة ---
+        showMessage(element, message, type = 'success') {
+            element.className = `alert alert-${type}`;
+            element.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            element.style.display = 'flex';
             setTimeout(() => {
-                element.innerHTML = '';
-            }, 5000);
+                element.style.display = 'none';
+            }, 3000);
         }
+    };
 
-        // التحقق من وجود توكن محفوظ عند تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedToken = localStorage.getItem('adminToken');
-            const savedAdmin = localStorage.getItem('adminData');
-            
-            if (savedToken && savedAdmin) {
-                authToken = savedToken;
-                currentAdmin = JSON.parse(savedAdmin);
-                
-                adminName.textContent = currentAdmin.name || currentAdmin.email;
-                
-                loginPage.classList.add('hidden');
-                dashboardPage.classList.remove('hidden');
-                
-                loadDashboardData();
-            }
-        });
+    // =================================================================
+    // 4. بدء تشغيل التطبيق
+    // =================================================================
+    App.init();
+
+})();
+
     </script>
 </body>
 </html>
