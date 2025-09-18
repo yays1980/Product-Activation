@@ -630,7 +630,6 @@
             </div>
         </header>
 
-        
         <div class="dashboard">
             <nav class="sidebar" id="sidebar">
                 <ul class="sidebar-menu">
@@ -788,9 +787,7 @@
                             <h3><i class="fas fa-chart-pie"></i> تقارير الاستخدام</h3>
                         </div>
                         <div class="card-body">
-                            <p>هنا يمكن عرض رسوم بيانية تفاعلية للتقارير.</p>
-                            <!-- مثال على مكان لرسم بياني -->
-                            <canvas id="usageChart" width="400" height="200"></canvas>
+                            <p>هنا يمكن عرض التقارير كنصوص أو جداول.</p>
                         </div>
                     </div>
                 </section>
@@ -941,6 +938,7 @@
             </div>
         </div>
     </div>
+
         <script>
         // نستخدم IIFE لإنشاء نطاق خاص بالكود وتجنب تلويث النطاق العام
         (function() {
@@ -1021,7 +1019,7 @@
                 activationSearch: $("#activationSearch"),
 
                 // التقارير (مثال بسيط)
-                usageChart: $("#usageChart"),
+                usageChart: $("#usageChart"), // هذا العنصر لم يعد يستخدم للرسم البياني ولكن قد يكون موجودًا في HTML
             };
 
             // =================================================================
@@ -1093,7 +1091,7 @@
                     this.renderProducts();
                     this.renderActivations();
                     this.populateProductSelects();
-                    this.renderUsageChart();
+                    // this.renderUsageChart(); // تم إزالة استدعاء دالة Chart.js
                 },
 
                 toggleSidebar() {
@@ -1112,7 +1110,7 @@
                     if (pageId === "productsContent") this.renderProducts();
                     if (pageId === "activationsContent") this.renderActivations();
                     if (pageId === "addKeyContent") this.populateProductSelects();
-                    if (pageId === "reportsContent") this.renderUsageChart();
+                    // if (pageId === "reportsContent") this.renderUsageChart(); // تم إزالة استدعاء دالة Chart.js
                 },
                 
                 navigateTo(pageId, activeLink = null) {
@@ -1345,9 +1343,17 @@
                     alert("تم نسخ المفاتيح إلى الحافظة!");
                 },
 
-                // --- وظائف التقارير --- (مثال بسيط باستخدام Chart.js)
-                
-            
+                // --- وظائف مساعدة ---
+                showMessage(element, message, type = "success") {
+                    if (!element) return; // تأكد من وجود العنصر قبل التعديل
+                    element.className = `alert alert-${type}`;
+                    element.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i> ${message}`;
+                    element.classList.remove("hidden");
+                    setTimeout(() => {
+                        element.classList.add("hidden");
+                    }, 3000);
+                }
+            };
 
             // =================================================================
             // 4. بدء تشغيل التطبيق
@@ -1359,4 +1365,3 @@
 </body>
 
 </html>
-
