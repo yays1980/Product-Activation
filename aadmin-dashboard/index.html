@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,7 +90,8 @@
             color: var(--white);
             font-size: 1.5rem;
             cursor: pointer;
-            display: none; /* يظهر فقط في الشاشات الصغيرة */
+            display: none;
+            /* يظهر فقط في الشاشات الصغيرة */
         }
 
         .user-info {
@@ -113,13 +115,40 @@
             text-decoration: none;
         }
 
-        .btn-primary { background-color: var(--primary); color: var(--white); }
-        .btn-primary:hover { background-color: var(--secondary); transform: translateY(-2px); }
-        .btn-danger { background-color: var(--danger); color: var(--white); }
-        .btn-danger:hover { background-color: #d11466; transform: translateY(-2px); }
-        .btn-success { background-color: var(--success); color: var(--white); }
-        .btn-success:hover { background-color: #3aa5d3; transform: translateY(-2px); }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.875rem; }
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d11466;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #3aa5d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+        }
 
         /* --- صفحة تسجيل الدخول --- */
         .login-container {
@@ -141,8 +170,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-form h2 {
@@ -285,6 +321,7 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
+
         .card-header h3 {
             display: flex;
             align-items: center;
@@ -302,7 +339,8 @@
             min-width: 700px;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 1rem;
             text-align: right;
             border-bottom: 1px solid var(--border-color);
@@ -343,6 +381,7 @@
             font-size: 1rem;
             transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
         }
+
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
@@ -366,11 +405,24 @@
             text-transform: uppercase;
         }
 
-        .badge-success { background-color: rgba(76, 201, 240, 0.2); color: #0077b6; }
-        .badge-danger { background-color: rgba(247, 37, 133, 0.15); color: #f72585; }
-        .badge-warning { background-color: rgba(248, 150, 30, 0.15); color: #f8961e; }
+        .badge-success {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: #0077b6;
+        }
 
-        .hidden { display: none !important; }
+        .badge-danger {
+            background-color: rgba(247, 37, 133, 0.15);
+            color: #f72585;
+        }
+
+        .badge-warning {
+            background-color: rgba(248, 150, 30, 0.15);
+            color: #f8961e;
+        }
+
+        .hidden {
+            display: none !important;
+        }
 
         /* --- البحث --- */
         .search-box {
@@ -393,11 +445,13 @@
         /* --- التصميم المتجاوب (Responsive) --- */
         @media (max-width: 992px) {
             .sidebar {
-                transform: translateX(100%); /* إخفاء الشريط الجانبي خارج الشاشة */
+                transform: translateX(100%);
+                /* إخفاء الشريط الجانبي خارج الشاشة */
             }
 
             .sidebar.open {
-                transform: translateX(0); /* إظهار الشريط الجانبي */
+                transform: translateX(0);
+                /* إظهار الشريط الجانبي */
                 box-shadow: var(--box-shadow);
             }
 
@@ -408,7 +462,7 @@
             .menu-toggle {
                 display: block;
             }
-            
+
             /* طبقة داكنة عند فتح القائمة */
             .overlay {
                 position: fixed;
@@ -416,10 +470,11 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0,0,0,0.4);
+                background-color: rgba(0, 0, 0, 0.4);
                 z-index: 998;
                 display: none;
             }
+
             .overlay.show {
                 display: block;
             }
@@ -427,27 +482,120 @@
 
         @media (max-width: 768px) {
             .header-content .user-info span {
-                display: none; /* إخفاء اسم المشرف في الشاشات الصغيرة */
+                display: none;
+                /* إخفاء اسم المشرف في الشاشات الصغيرة */
             }
+
             .stats-cards {
-                grid-template-columns: 1fr; /* كرت واحد في كل سطر */
+                grid-template-columns: 1fr;
+                /* كرت واحد في كل سطر */
             }
+
             .page-title {
                 font-size: 1.5rem;
             }
+
             .main-content {
                 padding: 1rem;
             }
         }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: #0077b6;
+            border: 1px solid rgba(76, 201, 240, 0.2);
+        }
+
+        .alert-error {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: #f72585;
+            border: 1px solid rgba(247, 37, 133, 0.2);
+        }
     </style>
 </head>
+
 <body>
     <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="login-container">
         <div class="login-form">
             <h2><i class="fas fa-lock"></i> تسجيل دخول المشرفين</h2>
-            <div id="loginMessage"></div>
-            <form id="loginForm" action="#">
+            <div id="loginMessage" class="alert hidden"></div>
+            <form id="loginForm">
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني</label>
                     <input type="email" id="email" required>
@@ -482,6 +630,7 @@
             </div>
         </header>
 
+        
         <div class="dashboard">
             <nav class="sidebar" id="sidebar">
                 <ul class="sidebar-menu">
@@ -494,7 +643,7 @@
                     <li><a href="#addProduct" class="nav-link" data-page="addProductContent"><i class="fas fa-plus-circle"></i> إضافة منتج</a></li>
                 </ul>
             </nav>
-            
+
             <div class="overlay" id="overlay"></div>
 
             <main class="main-content">
@@ -502,37 +651,44 @@
                 <section id="dashboardContent" class="page-content">
                     <h2 class="page-title"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
                     <div class="stats-cards">
-                        <!-- تم تعديل هيكل الكروت -->
                         <div class="stat-card">
                             <div class="icon"><i class="fas fa-check-circle"></i></div>
                             <div class="info">
-                                <h3 id="totalActivations">1,250</h3>
+                                <h3 id="totalActivations">0</h3>
                                 <p>إجمالي التفعيلات</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="icon"><i class="fas fa-key"></i></div>
                             <div class="info">
-                                <h3 id="usedKeys">800</h3>
+                                <h3 id="usedKeys">0</h3>
                                 <p>المفاتيح المستخدمة</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="icon"><i class="fas fa-key"></i></div>
                             <div class="info">
-                                <h3 id="unusedKeys">450</h3>
+                                <h3 id="unusedKeys">0</h3>
                                 <p>المفاتيح المتاحة</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="icon"><i class="fas fa-box"></i></div>
                             <div class="info">
-                                <h3 id="totalProducts">15</h3>
+                                <h3 id="totalProducts">0</h3>
                                 <p>عدد المنتجات</p>
                             </div>
                         </div>
                     </div>
-                    <!-- بقية المحتوى هنا -->
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> نظرة عامة على النشاط</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>هنا يمكن إضافة رسوم بيانية أو ملخصات للنشاط.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- محتوى إدارة المفاتيح -->
@@ -554,342 +710,653 @@
                                         <th>المنتج</th>
                                         <th>الحالة</th>
                                         <th>تاريخ الإنشاء</th>
+                                        <th>بواسطة</th>
                                         <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody id="keysList">
-                                    <tr>
-                                        <td>ABC-123-DEF-456</td>
-                                        <td>المنتج أ</td>
-                                        <td><span class="badge badge-success">متاح</span></td>
-                                        <td>2023-10-27</td>
-                                        <td><button class="btn btn-danger btn-sm">حذف</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>XYZ-789-GHI-012</td>
-                                        <td>المنتج ب</td>
-                                        <td><span class="badge badge-danger">مستخدم</span></td>
-                                        <td>2023-10-26</td>
-                                        <td><button class="btn btn-danger btn-sm" disabled>حذف</button></td>
-                                    </tr>
+                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
-                
-                <!-- بقية أقسام المحتوى (products, activations, etc.) تتبع نفس النمط -->
 
+                <!-- محتوى إدارة المنتجات -->
+                <section id="productsContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-box"></i> إدارة المنتجات</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-list"></i> جميع المنتجات</h3>
+                            <button class="btn btn-success btn-sm" data-page="addProductContent"><i class="fas fa-plus"></i> إضافة منتج جديد</button>
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>اسم المنتج</th>
+                                        <th>الإصدار</th>
+                                        <th>السعر</th>
+                                        <th>الحالة</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsList">
+                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- محتوى التفعيلات -->
+                <section id="activationsContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-check-circle"></i> سجل التفعيلات</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history"></i> أحدث التفعيلات</h3>
+                            <div class="search-box">
+                                <input type="text" id="activationSearch" placeholder="بحث في التفعيلات...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>المفتاح</th>
+                                        <th>المنتج</th>
+                                        <th>المستخدم</th>
+                                        <th>الجهاز</th>
+                                        <th>التاريخ</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activationsList">
+                                    <!-- سيتم ملء هذا بواسطة JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- محتوى التقارير -->
+                <section id="reportsContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-chart-bar"></i> التقارير</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-pie"></i> تقارير الاستخدام</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>هنا يمكن عرض رسوم بيانية تفاعلية للتقارير.</p>
+                            <!-- مثال على مكان لرسم بياني -->
+                            <canvas id="usageChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- محتوى إضافة مفتاح -->
+                <section id="addKeyContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-plus-circle"></i> إضافة مفتاح جديد</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-key"></i> إنشاء مفاتيح جديدة</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="addKeyMessage" class="alert hidden"></div>
+                            <form id="addKeyForm">
+                                <div class="form-group">
+                                    <label for="keyProductSelect">المنتج *</label>
+                                    <select id="keyProductSelect" required>
+                                        <!-- سيتم ملء هذا بواسطة JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="numberOfKeys">عدد المفاتيح *</label>
+                                    <input type="number" id="numberOfKeys" min="1" value="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> إنشاء المفاتيح
+                                </button>
+                            </form>
+                            <div id="generatedKeysOutput" class="hidden" style="margin-top: 2rem;">
+                                <h4><i class="fas fa-key"></i> المفاتيح المنشورة:</h4>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i> تم إنشاء المفاتيح بنجاح! يمكنك نسخها الآن.
+                                </div>
+                                <textarea id="keysOutput" rows="5" style="width: 100%;" readonly></textarea>
+                                <button id="copyKeysBtn" class="btn btn-primary mt-3">
+                                    <i class="fas fa-copy"></i> نسخ المفاتيح
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="addProductContent" class="page-content hidden">
+                    <h2 class="page-title"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</h2>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-box"></i> إضافة منتج جديد</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="addProductMessage" class="alert hidden"></div>
+                            <form id="addProductForm">
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label for="productName">اسم المنتج *</label>
+                                            <input type="text" id="productName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label for="productVersion">الإصدار *</label>
+                                            <input type="text" id="productVersion" value="1.0" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label for="productPrice">السعر (ريال سعودي)</label>
+                                            <input type="number" id="productPrice" min="0" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label for="productStatus">الحالة</label>
+                                            <select id="productStatus">
+                                                <option value="true">نشط</option>
+                                                <option value="false">غير نشط</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productDescription">وصف المنتج</label>
+                                    <textarea id="productDescription" rows="3" placeholder="وصف للمنتج..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> حفظ المنتج
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
 
-    <script>
-        // --- كود JavaScript أساسي لتفعيل لوحة التحكم ---
+    <div id="editProductModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تعديل المنتج</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="editProductMessage" class="alert hidden"></div>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="editProductName">اسم المنتج *</label>
+                                <input type="text" id="editProductName" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="editProductVersion">الإصدار *</label>
+                                <input type="text" id="editProductVersion" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="editProductPrice">السعر (ريال سعودي)</label>
+                                <input type="number" id="editProductPrice" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="editProductStatus">الحالة</label>
+                                <select id="editProductStatus">
+                                    <option value="true">نشط</option>
+                                    <option value="false">غير نشط</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductDescription">وصف المنتج</label>
+                        <textarea id="editProductDescription" rows="3" placeholder="وصف للمنتج..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ التغييرات
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+        <script>
         // نستخدم IIFE لإنشاء نطاق خاص بالكود وتجنب تلويث النطاق العام
-(function() {
-    'use strict';
+        (function() {
+            'use strict';
 
-    // =================================================================
-    // 1. محاكاة قاعدة البيانات (Mock Data)
-    // في تطبيق حقيقي، هذه البيانات ستأتي من الخادم (API)
-    // =================================================================
-    let db = {
-        products: [
-            { id: 1, name: 'برنامج المحاسبة', version: '2.5', price: 500, status: true, description: 'برنامج لإدارة الحسابات والمخزون' },
-            { id: 2, name: 'أداة التصميم', version: '1.0', price: 150, status: true, description: 'أداة لتصميم الرسومات' },
-            { id: 3, name: 'نظام إدارة العملاء', version: '3.1', price: 1200, status: false, description: 'نظام متكامل لإدارة علاقات العملاء' },
-        ],
-        keys: [
-            { id: 1, key: 'ABC-123-DEF-456', productId: 1, used: false, createdAt: '2025-09-15', createdBy: 'admin' },
-            { id: 2, key: 'GHI-789-JKL-012', productId: 2, used: true, createdAt: '2025-09-14', createdBy: 'admin' },
-            { id: 3, key: 'MNO-345-PQR-678', productId: 1, used: false, createdAt: '2025-09-16', createdBy: 'admin' },
-        ],
-        activations: [
-            { id: 1, userId: 101, productId: 2, deviceId: 'DEV-A1B2', activationKey: 'GHI-789-JKL-012', date: '2025-09-15', status: 'ناجح' },
-        ],
-        users: [
-            { id: 101, name: 'أحمد محمد' }
-        ]
-    };
+            // =================================================================
+            // 1. محاكاة قاعدة البيانات (Mock Data)
+            // في تطبيق حقيقي، هذه البيانات ستأتي من الخادم (API)
+            // =================================================================
+            let db = {
+                products: [
+                    { id: 1, name: 'برنامج المحاسبة', version: '2.5', price: 500, status: true, description: 'برنامج لإدارة الحسابات والمخزون' },
+                    { id: 2, name: 'أداة التصميم', version: '1.0', price: 150, status: true, description: 'أداة لتصميم الرسومات' },
+                    { id: 3, name: 'نظام إدارة العملاء', version: '3.1', price: 1200, status: false, description: 'نظام متكامل لإدارة علاقات العملاء' },
+                ],
+                keys: [
+                    { id: 1, key: 'ABC-123-DEF-456', productId: 1, used: false, createdAt: '2025-09-15', createdBy: 'admin' },
+                    { id: 2, key: 'GHI-789-JKL-012', productId: 2, used: true, createdAt: '2025-09-14', createdBy: 'admin' },
+                    { id: 3, key: 'MNO-345-PQR-678', productId: 1, used: false, createdAt: '2025-09-16', createdBy: 'admin' },
+                ],
+                activations: [
+                    { id: 1, userId: 101, productId: 2, deviceId: 'DEV-A1B2', activationKey: 'GHI-789-JKL-012', date: '2025-09-15', status: 'ناجح' },
+                ],
+                users: [
+                    { id: 101, name: 'أحمد محمد' }
+                ]
+            };
 
-    // =================================================================
-    // 2. اختيار عناصر DOM الرئيسية
-    // =================================================================
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => document.querySelectorAll(selector);
+            // =================================================================
+            // 2. اختيار عناصر DOM الرئيسية
+            // =================================================================
+            const $ = (selector) => document.querySelector(selector);
+            const $$ = (selector) => document.querySelectorAll(selector);
 
-    const elements = {
-        loginPage: $('#loginPage'),
-        dashboardPage: $('#dashboardPage'),
-        loginForm: $('#loginForm'),
-        logoutBtn: $('#logoutBtn'),
-        
-        sidebar: $('#sidebar'),
-        menuToggle: $('#menuToggle'),
-        overlay: $('#overlay'),
-        navLinks: $$('.nav-link'),
-        pageContents: $$('.page-content'),
+            const elements = {
+                loginPage: $("#loginPage"),
+                dashboardPage: $("#dashboardPage"),
+                loginForm: $("#loginForm"),
+                logoutBtn: $("#logoutBtn"),
+                loginMessage: $("#loginMessage"),
+                
+                sidebar: $("#sidebar"),
+                menuToggle: $("#menuToggle"),
+                overlay: $("#overlay"),
+                navLinks: $$(".nav-link"),
+                pageContents: $$(".page-content"),
 
-        // الإحصائيات
-        totalActivations: $('#totalActivations'),
-        usedKeys: $('#usedKeys'),
-        unusedKeys: $('#unusedKeys'),
-        totalProducts: $('#totalProducts'),
+                // الإحصائيات
+                totalActivations: $("#totalActivations"),
+                usedKeys: $("#usedKeys"),
+                unusedKeys: $("#unusedKeys"),
+                totalProducts: $("#totalProducts"),
 
-        // المفاتيح
-        keysList: $('#keysList'),
-        keySearch: $('#keySearch'),
+                // المفاتيح
+                keysList: $("#keysList"),
+                keySearch: $("#keySearch"),
+                addKeyForm: $("#addKeyForm"),
+                keyProductSelect: $("#keyProductSelect"),
+                numberOfKeys: $("#numberOfKeys"),
+                addKeyMessage: $("#addKeyMessage"),
+                generatedKeysOutput: $("#generatedKeysOutput"),
+                keysOutput: $("#keysOutput"),
+                copyKeysBtn: $("#copyKeysBtn"),
 
-        // المنتجات
-        productsList: $('#productsList'),
-        addProductBtn: $('#addProductBtn'), // الزر في صفحة إدارة المنتجات
-        addProductForm: $('#addProductForm'),
-        addProductMessage: $('#addProductMessage'),
+                // المنتجات
+                productsList: $("#productsList"),
+                addProductForm: $("#addProductForm"),
+                addProductMessage: $("#addProductMessage"),
 
-        // تعديل المنتج (Modal)
-        editProductModal: $('#editProductModal'),
-        editProductForm: $('#editProductForm'),
-        editProductMessage: $('#editProductMessage'),
-        closeModalBtn: $('.modal .close'),
-    };
+                // تعديل المنتج (Modal)
+                editProductModal: $("#editProductModal"),
+                editProductForm: $("#editProductForm"),
+                editProductMessage: $("#editProductMessage"),
+                closeModalBtn: $(".modal-close"), // تم التعديل هنا
 
-    // =================================================================
-    // 3. الدوال الرئيسية للتطبيق
-    // =================================================================
-    const App = {
-        init() {
-            // ربط الأحداث عند بدء تشغيل التطبيق
-            this.bindEvents();
-            // تحقق مما إذا كان المستخدم قد سجل الدخول بالفعل (باستخدام localStorage)
-            if (localStorage.getItem('isLoggedIn')) {
-                this.showDashboard();
-            }
-        },
+                // التفعيلات
+                activationsList: $("#activationsList"),
+                activationSearch: $("#activationSearch"),
 
-        bindEvents() {
-            elements.loginForm.addEventListener('submit', this.handleLogin.bind(this));
-            elements.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
-            elements.menuToggle.addEventListener('click', this.toggleSidebar.bind(this));
-            elements.overlay.addEventListener('click', this.toggleSidebar.bind(this));
-            
-            elements.navLinks.forEach(link => {
-                link.addEventListener('click', this.handlePageNavigation.bind(this));
-            });
+                // التقارير (مثال بسيط)
+                usageChart: $("#usageChart"),
+            };
 
-            elements.keySearch.addEventListener('input', this.renderKeys.bind(this));
-            elements.productsList.addEventListener('click', this.handleProductActions.bind(this));
-            elements.addProductForm.addEventListener('submit', this.handleAddProduct.bind(this));
-            elements.editProductForm.addEventListener('submit', this.handleEditProduct.bind(this));
-            elements.closeModalBtn.addEventListener('click', this.closeEditModal.bind(this));
-        },
+            // =================================================================
+            // 3. الدوال الرئيسية للتطبيق
+            // =================================================================
+            const App = {
+                init() {
+                    // ربط الأحداث عند بدء تشغيل التطبيق
+                    this.bindEvents();
+                    // تحقق مما إذا كان المستخدم قد سجل الدخول بالفعل (باستخدام localStorage)
+                    if (localStorage.getItem("isLoggedIn")) {
+                        this.showDashboard();
+                    } else {
+                        elements.loginPage.classList.remove("hidden");
+                    }
+                },
 
-        // --- وظائف المصادقة والتنقل ---
-        handleLogin(e) {
-            e.preventDefault();
-            // في تطبيق حقيقي، سترسل طلبًا إلى الخادم هنا
-            // للتبسيط، نعتبر أي إدخال صحيحًا
-            localStorage.setItem('isLoggedIn', 'true');
-            this.showDashboard();
-        },
+                bindEvents() {
+                    if (elements.loginForm) elements.loginForm.addEventListener("submit", this.handleLogin.bind(this));
+                    if (elements.logoutBtn) elements.logoutBtn.addEventListener("click", this.handleLogout.bind(this));
+                    if (elements.menuToggle) elements.menuToggle.addEventListener("click", this.toggleSidebar.bind(this));
+                    if (elements.overlay) elements.overlay.addEventListener("click", this.toggleSidebar.bind(this));
+                    
+                    elements.navLinks.forEach(link => {
+                        link.addEventListener("click", this.handlePageNavigation.bind(this));
+                    });
 
-        handleLogout() {
-            localStorage.removeItem('isLoggedIn');
-            elements.loginPage.classList.remove('hidden');
-            elements.dashboardPage.classList.add('hidden');
-        },
+                    if (elements.keySearch) elements.keySearch.addEventListener("input", this.renderKeys.bind(this));
+                    if (elements.keysList) elements.keysList.addEventListener("click", this.handleKeyActions.bind(this)); // إضافة معالج لأزرار حذف المفاتيح
+                    if (elements.productsList) elements.productsList.addEventListener("click", this.handleProductActions.bind(this));
+                    if (elements.addProductForm) elements.addProductForm.addEventListener("submit", this.handleAddProduct.bind(this));
+                    if (elements.editProductForm) elements.editProductForm.addEventListener("submit", this.handleEditProduct.bind(this));
+                    if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", this.closeEditModal.bind(this));
+                    if (elements.addKeyForm) elements.addKeyForm.addEventListener("submit", this.handleAddKeys.bind(this));
+                    if (elements.copyKeysBtn) elements.copyKeysBtn.addEventListener("click", this.copyGeneratedKeys.bind(this));
+                    if (elements.activationSearch) elements.activationSearch.addEventListener("input", this.renderActivations.bind(this));
 
-        showDashboard() {
-            elements.loginPage.classList.add('hidden');
-            elements.dashboardPage.classList.remove('hidden');
-            // عرض الصفحة الافتراضية (لوحة التحكم)
-            this.navigateTo('dashboardContent');
-            this.updateStats();
-            this.renderKeys();
-            this.renderProducts();
-        },
+                },
 
-        toggleSidebar() {
-            elements.sidebar.classList.toggle('open');
-            elements.overlay.classList.toggle('show');
-        },
+                // --- وظائف المصادقة والتنقل ---
+                handleLogin(e) {
+                    e.preventDefault();
+                    const email = $("#email").value;
+                    const password = $("#password").value;
 
-        handlePageNavigation(e) {
-            e.preventDefault();
-            const link = e.currentTarget;
-            const pageId = link.getAttribute('data-page');
-            this.navigateTo(pageId, link);
-        },
-        
-        navigateTo(pageId, activeLink = null) {
-            // تحديث الرابط النشط
-            elements.navLinks.forEach(nav => nav.classList.remove('active'));
-            if (activeLink) {
-                activeLink.classList.add('active');
-            } else {
-                // إذا لم يتم توفير رابط، ابحث عنه
-                $(`.nav-link[data-page="${pageId}"]`).classList.add('active');
-            }
+                    // مثال بسيط للتحقق: أي بريد وكلمة مرور ليست فارغة
+                    if (email && password) {
+                        localStorage.setItem("isLoggedIn", "true");
+                        this.showDashboard();
+                    } else {
+                        this.showMessage(elements.loginMessage, "الرجاء إدخال البريد الإلكتروني وكلمة المرور.", "error");
+                    }
+                },
 
-            // إظهار المحتوى المناسب
-            elements.pageContents.forEach(content => content.classList.add('hidden'));
-            $(`#${pageId}`).classList.remove('hidden');
+                handleLogout() {
+                    localStorage.removeItem("isLoggedIn");
+                    elements.loginPage.classList.remove("hidden");
+                    elements.dashboardPage.classList.add("hidden");
+                    this.showMessage(elements.loginMessage, "تم تسجيل الخروج بنجاح.", "success");
+                },
 
-            // إغلاق القائمة الجانبية على الهواتف
-            if (window.innerWidth <= 992 && elements.sidebar.classList.contains('open')) {
-                this.toggleSidebar();
-            }
-        },
+                showDashboard() {
+                    elements.loginPage.classList.add("hidden");
+                    elements.dashboardPage.classList.remove("hidden");
+                    // عرض الصفحة الافتراضية (لوحة التحكم)
+                    this.navigateTo("dashboardContent");
+                    this.updateStats();
+                    this.renderKeys();
+                    this.renderProducts();
+                    this.renderActivations();
+                    this.populateProductSelects();
+                    this.renderUsageChart();
+                },
 
-        // --- وظائف عرض البيانات (Render) ---
-        updateStats() {
-            elements.totalActivations.textContent = db.activations.length;
-            elements.usedKeys.textContent = db.keys.filter(k => k.used).length;
-            elements.unusedKeys.textContent = db.keys.filter(k => !k.used).length;
-            elements.totalProducts.textContent = db.products.length;
-        },
+                toggleSidebar() {
+                    elements.sidebar.classList.toggle("open");
+                    elements.overlay.classList.toggle("show");
+                },
 
-        renderKeys() {
-            const searchTerm = elements.keySearch.value.toLowerCase();
-            const filteredKeys = db.keys.filter(k => k.key.toLowerCase().includes(searchTerm));
+                handlePageNavigation(e) {
+                    e.preventDefault();
+                    const link = e.currentTarget;
+                    const pageId = link.getAttribute("data-page");
+                    this.navigateTo(pageId, link);
 
-            if (filteredKeys.length === 0) {
-                elements.keysList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد مفاتيح تطابق بحثك.</td></tr>`;
-                return;
-            }
+                    // تحديث البيانات عند الانتقال لصفحات معينة
+                    if (pageId === "keysContent") this.renderKeys();
+                    if (pageId === "productsContent") this.renderProducts();
+                    if (pageId === "activationsContent") this.renderActivations();
+                    if (pageId === "addKeyContent") this.populateProductSelects();
+                    if (pageId === "reportsContent") this.renderUsageChart();
+                },
+                
+                navigateTo(pageId, activeLink = null) {
+                    // إزالة كلاس 'active' من جميع الروابط وإضافته للرابط الحالي
+                    elements.navLinks.forEach(nav => nav.classList.remove("active"));
+                    if (activeLink) {
+                        activeLink.classList.add("active");
+                    } else {
+                        // إذا لم يتم توفير رابط، ابحث عنه
+                        const defaultLink = $(".nav-link[data-page=\"${pageId}\"]");
+                        if (defaultLink) defaultLink.classList.add("active");
+                    }
 
-            elements.keysList.innerHTML = filteredKeys.map(key => {
-                const product = db.products.find(p => p.id === key.productId);
-                return `
-                    <tr>
-                        <td>${key.key}</td>
-                        <td>${product ? product.name : 'غير معروف'}</td>
-                        <td>
-                            <span class="badge ${key.used ? 'badge-danger' : 'badge-success'}">
-                                ${key.used ? 'مستخدم' : 'متاح'}
-                            </span>
-                        </td>
-                        <td>${key.createdAt}</td>
-                        <td>${key.createdBy}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" data-id="${key.id}" ${key.used ? 'disabled' : ''}>حذف</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        },
+                    // إخفاء جميع صفحات المحتوى
+                    elements.pageContents.forEach(content => content.classList.add("hidden"));
+                    const targetPage = $(`#${pageId}`);
+                    if (targetPage) {
+                        targetPage.classList.remove("hidden");
+                    }
 
-        renderProducts() {
-            elements.productsList.innerHTML = db.products.map(product => `
-                <tr>
-                    <td>${product.name}</td>
-                    <td>${product.version}</td>
-                    <td>${product.price} ر.س</td>
-                    <td>
-                        <span class="badge ${product.status ? 'badge-success' : 'badge-danger'}">
-                            ${product.status ? 'نشط' : 'غير نشط'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm btn-edit" data-id="${product.id}">تعديل</button>
-                        <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}">حذف</button>
-                    </td>
-                </tr>
-            `).join('');
-        },
+                    // إغلاق القائمة عند اختيار رابط في وضع الموبايل
+                    if (window.innerWidth <= 992 && elements.sidebar.classList.contains("open")) {
+                        this.toggleSidebar();
+                    }
+                },
 
-        // --- وظائف إدارة المنتجات ---
-        handleProductActions(e) {
-            const target = e.target;
-            const id = parseInt(target.dataset.id);
+                // --- وظائف عرض البيانات (Render) ---
+                updateStats() {
+                    elements.totalActivations.textContent = db.activations.length;
+                    elements.usedKeys.textContent = db.keys.filter(k => k.used).length;
+                    elements.unusedKeys.textContent = db.keys.filter(k => !k.used).length;
+                    elements.totalProducts.textContent = db.products.length;
+                },
 
-            if (target.classList.contains('btn-edit')) {
-                this.openEditModal(id);
-            }
-            if (target.classList.contains('btn-delete')) {
-                if (confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج؟')) {
-                    db.products = db.products.filter(p => p.id !== id);
+                renderKeys() {
+                    const searchTerm = elements.keySearch ? elements.keySearch.value.toLowerCase() : "";
+                    const filteredKeys = db.keys.filter(k => k.key.toLowerCase().includes(searchTerm));
+
+                    if (filteredKeys.length === 0) {
+                        elements.keysList.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد مفاتيح تطابق بحثك.</td></tr>`;
+                        return;
+                    }
+
+                    elements.keysList.innerHTML = filteredKeys.map(key => {
+                        const product = db.products.find(p => p.id === key.productId);
+                        return `
+                            <tr>
+                                <td>${key.key}</td>
+                                <td>${product ? product.name : "غير معروف"}</td>
+                                <td>
+                                    <span class="badge ${key.used ? "badge-danger" : "badge-success"}">
+                                        ${key.used ? "مستخدم" : "متاح"}
+                                    </span>
+                                </td>
+                                <td>${key.createdAt}</td>
+                                <td>${key.createdBy}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete-key-btn" data-id="${key.id}" ${key.used ? "disabled" : ""}>حذف</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("");
+                },
+
+                handleKeyActions(e) {
+                    const target = e.target;
+                    if (target.classList.contains("delete-key-btn")) {
+                        const keyId = parseInt(target.dataset.id);
+                        if (confirm("هل أنت متأكد من رغبتك في حذف هذا المفتاح؟")) {
+                            db.keys = db.keys.filter(k => k.id !== keyId);
+                            this.renderKeys();
+                            this.updateStats();
+                        }
+                    }
+                },
+
+                renderProducts() {
+                    elements.productsList.innerHTML = db.products.map(product => `
+                        <tr>
+                            <td>${product.name}</td>
+                            <td>${product.version}</td>
+                            <td>${product.price} ر.س</td>
+                            <td>
+                                <span class="badge ${product.status ? "badge-success" : "badge-danger"}">
+                                    ${product.status ? "نشط" : "غير نشط"}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm btn-edit" data-id="${product.id}">تعديل</button>
+                                <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}">حذف</button>
+                            </td>
+                        </tr>
+                    `).join("");
+                },
+
+                handleProductActions(e) {
+                    const target = e.target;
+                    const id = parseInt(target.dataset.id);
+
+                    if (target.classList.contains("btn-edit")) {
+                        this.openEditModal(id);
+                    }
+                    if (target.classList.contains("btn-delete")) {
+                        if (confirm("هل أنت متأكد من رغبتك في حذف هذا المنتج؟")) {
+                            // تحقق مما إذا كان المنتج مرتبطًا بمفاتيح مستخدمة
+                            const hasUsedKeys = db.keys.some(key => key.productId === id && key.used);
+                            if (hasUsedKeys) {
+                                alert("لا يمكن حذف المنتج لأنه مرتبط بمفاتيح مستخدمة.");
+                                return;
+                            }
+                            db.products = db.products.filter(p => p.id !== id);
+                            // حذف المفاتيح غير المستخدمة المرتبطة بالمنتج المحذوف
+                            db.keys = db.keys.filter(key => key.productId !== id || key.used);
+                            this.renderProducts();
+                            this.updateStats();
+                            this.populateProductSelects();
+                        }
+                    }
+                },
+
+                handleAddProduct(e) {
+                    e.preventDefault();
+                    const newProduct = {
+                        id: Date.now(), // استخدام timestamp كمعرف فريد
+                        name: $("#productName").value,
+                        version: $("#productVersion").value,
+                        price: parseFloat($("#productPrice").value) || 0,
+                        status: $("#productStatus").value === "true",
+                        description: $("#productDescription").value,
+                    };
+                    db.products.push(newProduct);
                     this.renderProducts();
                     this.updateStats();
-                }
-            }
-        },
+                    this.populateProductSelects();
+                    this.showMessage(elements.addProductMessage, "تمت إضافة المنتج بنجاح!", "success");
+                    e.target.reset();
+                },
 
-        handleAddProduct(e) {
-            e.preventDefault();
-            const newProduct = {
-                id: Date.now(), // استخدام timestamp كمعرف فريد
-                name: $('#productName').value,
-                version: $('#productVersion').value,
-                price: parseFloat($('#productPrice').value) || 0,
-                status: $('#productStatus').value === 'true',
-                description: $('#productDescription').value,
-            };
-            db.products.push(newProduct);
-            this.renderProducts();
-            this.updateStats();
-            this.showMessage(elements.addProductMessage, 'تمت إضافة المنتج بنجاح!', 'success');
-            e.target.reset();
-        },
+                openEditModal(id) {
+                    const product = db.products.find(p => p.id === id);
+                    if (!product) return;
 
-        openEditModal(id) {
-            const product = db.products.find(p => p.id === id);
-            if (!product) return;
+                    $("#editProductId").value = product.id;
+                    $("#editProductName").value = product.name;
+                    $("#editProductVersion").value = product.version;
+                    $("#editProductPrice").value = product.price;
+                    $("#editProductStatus").value = product.status.toString(); // تحويل إلى نص للمقارنة في select
+                    $("#editProductDescription").value = product.description;
 
-            $('#editProductId').value = product.id;
-            $('#editProductName').value = product.name;
-            $('#editProductVersion').value = product.version;
-            $('#editProductPrice').value = product.price;
-            $('#editProductStatus').value = product.status;
-            $('#editProductDescription').value = product.description;
+                    elements.editProductModal.classList.add("show"); // استخدام كلاس show للتحكم في ظهور المودال
+                },
 
-            elements.editProductModal.classList.remove('hidden');
-        },
+                closeEditModal() {
+                    elements.editProductModal.classList.remove("show");
+                },
 
-        closeEditModal() {
-            elements.editProductModal.classList.add('hidden');
-        },
+                handleEditProduct(e) {
+                    e.preventDefault();
+                    const id = parseInt($("#editProductId").value);
+                    const productIndex = db.products.findIndex(p => p.id === id);
 
-        handleEditProduct(e) {
-            e.preventDefault();
-            const id = parseInt($('#editProductId').value);
-            const productIndex = db.products.findIndex(p => p.id === id);
+                    if (productIndex > -1) {
+                        db.products[productIndex] = {
+                            ...db.products[productIndex], // للحفاظ على الخصائص الأخرى إن وجدت
+                            name: $("#editProductName").value,
+                            version: $("#editProductVersion").value,
+                            price: parseFloat($("#editProductPrice").value) || 0,
+                            status: $("#editProductStatus").value === "true",
+                            description: $("#editProductDescription").value,
+                        };
+                        this.renderProducts();
+                        this.updateStats();
+                        this.populateProductSelects();
+                        this.showMessage(elements.editProductMessage, "تم تحديث المنتج بنجاح!", "success");
+                        setTimeout(() => this.closeEditModal(), 1500);
+                    } else {
+                        this.showMessage(elements.editProductMessage, "حدث خطأ أثناء التحديث.", "error");
+                    }
+                },
 
-            if (productIndex > -1) {
-                db.products[productIndex] = {
-                    id: id,
-                    name: $('#editProductName').value,
-                    version: $('#editProductVersion').value,
-                    price: parseFloat($('#editProductPrice').value) || 0,
-                    status: $('#editProductStatus').value === 'true',
-                    description: $('#editProductDescription').value,
-                };
-                this.renderProducts();
-                this.showMessage(elements.editProductMessage, 'تم تحديث المنتج بنجاح!', 'success');
-                setTimeout(() => this.closeEditModal(), 1500);
-            } else {
-                this.showMessage(elements.editProductMessage, 'حدث خطأ أثناء التحديث.', 'error');
-            }
-        },
-        
-        // --- وظائف مساعدة ---
-        showMessage(element, message, type = 'success') {
-            element.className = `alert alert-${type}`;
-            element.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-            element.style.display = 'flex';
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 3000);
-        }
-    };
+                // --- وظائف إضافة المفاتيح ---
+                handleAddKeys(e) {
+                    e.preventDefault();
+                    const productId = parseInt(elements.keyProductSelect.value);
+                    const numberOfKeys = parseInt(elements.numberOfKeys.value);
+                    const generatedKeys = [];
 
-    // =================================================================
-    // 4. بدء تشغيل التطبيق
-    // =================================================================
-    App.init();
+                    if (!productId || numberOfKeys < 1) {
+                        this.showMessage(elements.addKeyMessage, "الرجاء اختيار منتج وتحديد عدد المفاتيح.", "error");
+                        return;
+                    }
 
-})();
+                    for (let i = 0; i < numberOfKeys; i++) {
+                        const newKey = this.generateUniqueKey();
+                        db.keys.push({
+                            id: Date.now() + i, // معرف فريد لكل مفتاح
+                            key: newKey,
+                            productId: productId,
+                            used: false,
+                            createdAt: new Date().toISOString().slice(0, 10),
+                            createdBy: "admin" // يمكن تغيير هذا ديناميكيًا
+                        });
+                        generatedKeys.push(newKey);
+                    }
 
+                    elements.keysOutput.value = generatedKeys.join("\n");
+                    elements.generatedKeysOutput.classList.remove("hidden");
+                    this.showMessage(elements.addKeyMessage, `تم إنشاء ${numberOfKeys} مفتاح بنجاح!`, "success");
+                    this.renderKeys();
+                    this.updateStats();
+                    e.target.reset();
+                },
+
+                generateUniqueKey() {
+                    // دالة بسيطة لتوليد مفتاح فريد (يمكن تحسينها)
+                    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                    let result = "";
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            result += chars.charAt(Math.floor(Math.random() * chars.length));
+                        }
+                        if (i < 2) result += "-";
+                    }
+                    return result;
+                },
+
+                copyGeneratedKeys() {
+                    elements.keysOutput.select();
+                    document.execCommand("copy");
+                    alert("تم نسخ المفاتيح إلى الحافظة!");
+                },
+
+                // --- وظائف التقارير --- (مثال بسيط باستخدام Chart.js)
+                
+            
+
+            // =================================================================
+            // 4. بدء تشغيل التطبيق
+            // =================================================================
+            App.init();
+
+        })();
     </script>
 </body>
+
 </html>
+
