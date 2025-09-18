@@ -938,8 +938,7 @@
             </div>
         </div>
     </div>
-
-        <script>
+    <script>
         // نستخدم IIFE لإنشاء نطاق خاص بالكود وتجنب تلويث النطاق العام
         (function() {
             'use strict';
@@ -1109,8 +1108,13 @@
                     if (pageId === "keysContent") this.renderKeys();
                     if (pageId === "productsContent") this.renderProducts();
                     if (pageId === "activationsContent") this.renderActivations();
-                    if (pageId === "addKeyContent") this.populateProductSelects();
+                    if (pageId === "addKeyContent" || pageId === "addProductContent") this.populateProductSelects();
                     // if (pageId === "reportsContent") this.renderUsageChart(); // تم إزالة استدعاء دالة Chart.js
+
+                    // إغلاق القائمة عند اختيار رابط في وضع الموبايل
+                    if (window.innerWidth <= 992 && elements.sidebar.classList.contains("open")) {
+                        this.toggleSidebar();
+                    }
                 },
                 
                 navigateTo(pageId, activeLink = null) {
