@@ -506,25 +506,22 @@ app.post("/admin/keys", authenticateAdmin, async (req, res) => {
 });
 
 // ًں“ٹ ط§ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ط¬ظ…ظٹط¹ ط§ظ„ظ…ظپط§طھظٹط­
-app.get("/admin/keys", authenticateAdmin, async (req, res) => {
+app.get('/admin/keys', authenticateAdmin, async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from("product_keys")
+      .from('product_keys')
       .select(`
-        id, key_value, is_used, created_at, created_by,
+        *,
         products (name, version)
       `)
-      .order("created_at", { ascending: false });
+      .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error("Supabase query error in /admin/keys:", error.message);
-      throw error;
-    }
+    if (error) throw error;
 
-    res.status(200).json({ success: true, keys: data });
+    res.json({ success: true, keys: data });
   } catch (err) {
-    console.error("Fetch keys error:", err.message || err);
-    res.status(500).json({ success: false, message: "Failed to fetch keys", details: err.message });
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch keys" });
   }
 });
 // â‌Œ ط­ط°ظپ ظ…ظپطھط§ط­ (ط؛ظٹط± ظ…ط³طھط®ط¯ظ… ظپظ‚ط·)
