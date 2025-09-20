@@ -1,4 +1,4 @@
-٧<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -338,45 +338,33 @@
 
         /* Modal Styles */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1000;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: auto;
+            background-color: #fff;
             padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            max-width: 500px;
             border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: relative;
         }
 
         .close-button {
-            color: #aaa;
-            float: left;
-            font-size: 28px;
-            font-weight: bold;
             position: absolute;
             top: 10px;
             right: 20px;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
+            font-size: 28px;
             cursor: pointer;
         }
 
@@ -709,33 +697,14 @@
     </div>
 
     <script>
-        // #####################
-        // إصلاحات وملاحظات هامة
-        // #####################
-
-        // 1. استخدام "products" بدلاً من "products?" في بعض الأماكن لتجنب undefined.
-        //    - تم التأكد من استخدام الوصول الآمن للخصائص المتداخلة (مثل activation.products?.name) حيثما كان ذلك مناسبًا.
-        // 2. استخدام "users" بدلاً من "users?" في بعض الأماكن لتجنب undefined.
-        //    - تم التأكد من استخدام الوصول الآمن للخصائص المتداخلة (مثل activation.users?.email) حيثما كان ذلك مناسبًا.
-        // 3. إصلاح اختيار الحالة في تعديل المنتج ليكون متوافقاً دائماً (value من نوع string).
-        //    - تم تحويل قيمة `product.is_active` إلى boolean صراحة عند تعيينها لـ checkbox.
-        // 4. إصلاح مشكلة نسخ المفاتيح في بعض المتصفحات القديمة (استخدام Clipboard API بدلاً من execCommand).
-        //    - تم تحديث دالة `copyToClipboard` لاستخدام `navigator.clipboard.writeText`.
-        // 5. إصلاح حذف الخيارات المكررة في المنتجات (استخدام عنصر option منفصل لكل قائمة).
-        //    - تم التأكد من مسح الخيارات بشكل صحيح قبل إعادة تعبئة القوائم المنسدلة.
-        // 6. إصلاح إغلاق المودال عند النقر خارج محتوى المودال.
-        //    - تم إضافة معالج أحداث لـ `window.onclick` لإغلاق المودال عند النقر خارجه.
-        // 7. إضافة فحص لحماية الدوال من DOM غير موجود.
-        //    - تم إضافة فحوصات `if (element)` قبل محاولة الوصول إلى عناصر DOM أو إضافة معالجات أحداث.
-        // 8. إصلاح مشكلة عديم التعريف في بعض خرائط البيانات.
-        //    - تم استخدام عامل التشغيل الاختياري `?.` والتحقق من وجود الخصائص قبل الوصول إليها في قوالب السلاسل النصية.
-        // 9. إصلاح خطأ في رسالة التقارير: alert-info يجب أن تكون معرفة في CSS.
-        //    - تم إضافة تعريف لـ `.alert-info` في CSS.
-        // 10. إصلاح حدث التنقل: إذا كانت الصفحة غير موجودة لا ترمي خطأ.
-        //    - تم إضافة فحص `if (pageContent)` قبل محاولة إزالة فئة `hidden`.
-        // 11. إصلاح بعض أخطاء الواجهة في التوكن والمنتجات.
-        //    - تم مراجعة منطق تحميل البيانات وعرضها لضمان التناسق.
-        // #####################
+        // إصلاحات وملاحظات هامة تم تطبيقها في الكود:
+        // 1. استخدام optional chaining (?) عند الوصول للخصائص المتداخلة
+        // 2. مسح الخيارات قبل إعادة تعبئة القوائم المنسدلة
+        // 3. استخدام Clipboard API الحديث
+        // 4. معالجة حالات undefined في واجهة المستخدم
+        // 5. تحسين رسائل الخطأ والتعامل مع الأخطاء
+        // 6. تصحيح منطق التعامل مع boolean في حالة المنتج
+        // 7. إضافة checks للحماية من DOM غير موجود
 
         let authToken = null;
         let currentAdmin = null;
@@ -758,7 +727,7 @@
 
         // Utility function to show messages
         function showMessage(element, message, type) {
-            if (!element) return; // Safeguard against null element
+            if (!element) return;
             element.innerHTML = `
                 <div class="alert alert-${type}">
                     <i class="fas fa-${type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle')}"></i>
@@ -827,17 +796,16 @@
                 const pageContent = document.getElementById(`${pageId}Content`);
                 if (pageContent) {
                     pageContent.classList.remove('hidden');
-                    if (pageTitle) pageTitle.textContent = link.querySelector('span').textContent; // Update page title
+                    if (pageTitle) pageTitle.textContent = link.querySelector('span').textContent;
                 }
 
-                // Load data based on pageId
                 if (pageId === 'keys') loadKeys();
                 else if (pageId === 'products') loadProducts();
                 else if (pageId === 'activations') loadActivations();
                 else if (pageId === 'dashboard') loadDashboardData();
                 else if (pageId === 'addKey') loadProductOptions();
                 else if (pageId === 'addProduct') { /* No specific data load needed */ }
-                else if (pageId === 'reports') loadProductOptions(); // Load product options for reports
+                else if (pageId === 'reports') loadProductOptions();
             });
         });
 
@@ -864,7 +832,7 @@
                     const activationsData = await activationsResponse.json();
                     const activationsList = document.getElementById('recentActivations');
                     if (activationsList) {
-                        if (activationsData.success && activationsData.activations.length > 0) {
+                        if (activationsData.success && activationsData.activations?.length > 0) {
                             activationsList.innerHTML = activationsData.activations.map(activation => `
                                 <tr>
                                     <td>${activation.products?.name || 'غير معروف'}</td>
@@ -894,7 +862,7 @@
                     const data = await response.json();
                     const keysList = document.getElementById('keysList');
                     if (keysList) {
-                        if (data.success && data.keys.length > 0) {
+                        if (data.success && data.keys?.length > 0) {
                             keysList.innerHTML = data.keys.map(key => `
                                 <tr>
                                     <td>${key.key_value || 'N/A'} <button class="btn btn-info btn-sm" onclick="copyToClipboard('${key.key_value}')"><i class="fas fa-copy"></i></button></td>
@@ -936,7 +904,7 @@
                     const data = await response.json();
                     const productsList = document.getElementById('productsList');
                     if (productsList) {
-                        if (data.success && data.products.length > 0) {
+                        if (data.success && data.products?.length > 0) {
                             productsList.innerHTML = data.products.map(product => `
                                 <tr>
                                     <td>${product.name || 'N/A'}</td>
@@ -980,7 +948,7 @@
                     const data = await response.json();
                     const activationsList = document.getElementById('activationsList');
                     if (activationsList) {
-                        if (data.success && data.activations.length > 0) {
+                        if (data.success && data.activations?.length > 0) {
                             activationsList.innerHTML = data.activations.map(activation => `
                                 <tr>
                                     <td>${activation.users?.email || activation.users?.device_id || 'مجهول'}</td>
@@ -1013,7 +981,7 @@
                     const productSelect = document.getElementById('productSelect');
                     const reportProduct = document.getElementById('reportProduct');
 
-                    // Clear previous options, keeping the default one
+                    // Clear previous options
                     if (productSelect) {
                         while (productSelect.options.length > 1) {
                             productSelect.remove(1);
@@ -1025,7 +993,7 @@
                         }
                     }
 
-                    if (data.success && data.products.length > 0) {
+                    if (data.success && data.products?.length > 0) {
                         data.products.forEach(product => {
                             if (product.is_active) {
                                 const opt1 = document.createElement('option');
@@ -1071,7 +1039,7 @@
                     if (data.success) {
                         showMessage(document.getElementById('addKeyMessage'), `تم إنشاء ${data.keys.length} مفتاح بنجاح.`, 'success');
                         addKeyForm.reset();
-                        loadKeys(); // Refresh keys list
+                        loadKeys();
                     } else {
                         showMessage(document.getElementById('addKeyMessage'), 'فشل في إنشاء المفاتيح: ' + data.message, 'error');
                     }
@@ -1105,8 +1073,8 @@
                     if (data.success) {
                         showMessage(document.getElementById('addProductMessage'), 'تم إضافة المنتج بنجاح.', 'success');
                         addProductForm.reset();
-                        loadProducts(); // Refresh products list
-                        loadProductOptions(); // Refresh product dropdowns
+                        loadProducts();
+                        loadProductOptions();
                     } else {
                         showMessage(document.getElementById('addProductMessage'), 'فشل في إضافة المنتج: ' + data.message, 'error');
                     }
@@ -1130,7 +1098,7 @@
                 const data = await response.json();
                 if (data.success) {
                     alert('تم حذف المفتاح بنجاح');
-                    loadKeys(); // Refresh keys list
+                    loadKeys();
                 } else {
                     alert('فشل في حذف المفتاح: ' + data.message);
                 }
@@ -1154,8 +1122,8 @@
                         if (document.getElementById('editProductName')) document.getElementById('editProductName').value = product.name;
                         if (document.getElementById('editProductVersion')) document.getElementById('editProductVersion').value = product.version;
                         if (document.getElementById('editProductPrice')) document.getElementById('editProductPrice').value = product.price;
-                        if (document.getElementById('editProductIsActive')) document.getElementById('editProductIsActive').checked = product.is_active === true; // Ensure boolean comparison
-                        if (editProductModal) editProductModal.style.display = 'flex'; // Use flex to center
+                        if (document.getElementById('editProductIsActive')) document.getElementById('editProductIsActive').checked = product.is_active === true;
+                        if (editProductModal) editProductModal.style.display = 'flex';
                     } else {
                         alert('فشل في تحميل بيانات المنتج: ' + data.message);
                     }
@@ -1173,7 +1141,7 @@
             });
         }
 
-        // Close modal when clicking outside of it
+        // Close modal when clicking outside
         window.addEventListener('click', (event) => {
             if (event.target === editProductModal) {
                 if (editProductModal) editProductModal.style.display = 'none';
@@ -1204,8 +1172,8 @@
                     if (data.success) {
                         showMessage(document.getElementById('editProductMessage'), 'تم تحديث المنتج بنجاح.', 'success');
                         if (editProductModal) editProductModal.style.display = 'none';
-                        loadProducts(); // Refresh products list
-                        loadProductOptions(); // Refresh product dropdowns
+                        loadProducts();
+                        loadProductOptions();
                     } else {
                         showMessage(document.getElementById('editProductMessage'), 'فشل في تحديث المنتج: ' + data.message, 'error');
                     }
@@ -1216,7 +1184,7 @@
             });
         }
 
-        // Toggle Product Status functionality
+        // Toggle Product Status
         async function toggleProduct(productId, isActive) {
             if (!confirm(`هل أنت متأكد أنك تريد ${isActive ? 'تفعيل' : 'تعطيل'} هذا المنتج؟`)) return;
             try {
@@ -1242,7 +1210,7 @@
             }
         }
 
-        // Copy to Clipboard functionality (Modern Clipboard API)
+        // Copy to Clipboard
         async function copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
@@ -1253,7 +1221,7 @@
             }
         }
 
-        // Report Generation functionality
+        // Report Generation
         const reportForm = document.getElementById('reportForm');
         if (reportForm) {
             reportForm.addEventListener('submit', async (e) => {
@@ -1297,13 +1265,13 @@
                     }
                 } catch (error) {
                     console.error('Error generating report:', error);
-                    showMessage(reportMessageElement, 'خطأ في الاتصال بالخادم عند إنشاء التقرير.', 'error');
+                    showMessage(reportMessageElement, 'خطأ في الاتصال بالخادم عند إنشاء التقارير.', 'error');
                     reportTableBody.innerHTML = '<tr><td colspan="4" class="text-center">خطأ في تحميل البيانات</td></tr>';
                 }
             });
         }
 
-        // Initial check for saved token on page load
+        // Initial check for saved token
         window.addEventListener('DOMContentLoaded', () => {
             const savedToken = localStorage.getItem('adminToken');
             const savedAdmin = localStorage.getItem('adminData');
@@ -1323,4 +1291,3 @@
     </script>
 </body>
 </html>
-
