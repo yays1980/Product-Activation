@@ -984,10 +984,11 @@
                         loadProductOptions();
                     } else {
                         showMessage(loginMessage, data.message, 'error');
+                    console.error('Login API response error:', data.message);
                     }
                 } catch (error) {
-                    showMessage(loginMessage, 'خطأ في الاتصال بالخادم', 'error');
-                    console.error('Login error:', error);
+                    showMessage(loginMessage, 'خطأ في الاتصال بالخادم. يرجى التحقق من عنوان API.', 'error');
+                    console.error('Login network error:', error);
                 }
             });
         }
