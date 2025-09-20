@@ -1008,25 +1008,25 @@
 
         // Page navigation
         pageLinks.forEach(link => {
-            link.addEventListener(\'click\', (e) => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
-                pageLinks.forEach(l => l.classList.remove(\'active\'));
-                link.classList.add(\'active\');
-                pageContents.forEach(content => content.classList.add(\'hidden\'));
-                const pageId = link.getAttribute(\'data-page\');
+                pageLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                pageContents.forEach(content => content.classList.add('hidden'));
+                const pageId = link.getAttribute('data-page');
                 const pageContent = document.getElementById(`${pageId}Content`);
                 if (pageContent) {
-                    pageContent.classList.remove(\'hidden\');
-                    if (pageTitle) pageTitle.textContent = link.querySelector(\'span\').textContent;
+                    pageContent.classList.remove('hidden');
+                    if (pageTitle) pageTitle.textContent = link.querySelector('span').textContent;
                 }
 
-                if (pageId === \'keys\') loadKeys();
-                else if (pageId === \'products\') loadProducts();
-                else if (pageId === \'activations\') loadActivations();
-                else if (pageId === \'dashboard\') loadDashboardData();
-                else if (pageId === \'addKey\') loadProductOptions();
-                else if (pageId === \'addProduct\') { /* No specific data load needed */ }
-                else if (pageId === \'reports\') loadProductOptions();
+                if (pageId === 'keys') loadKeys();
+                else if (pageId === 'products') loadProducts();
+                else if (pageId === 'activations') loadActivations();
+                else if (pageId === 'dashboard') loadDashboardData();
+                else if (pageId === 'addKey') loadProductOptions();
+                else if (pageId === 'addProduct') { /* No specific data load needed */ }
+                else if (pageId === 'reports') loadProductOptions();
 
                 // Close mobile sidebar after navigation
                 if (window.innerWidth <= 768) {
@@ -1511,21 +1511,23 @@
             });
         }
 
-        // Initial check for saved token
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedToken = localStorage.getItem('adminToken');
-            const savedAdmin = localStorage.getItem('adminData');
+        // Initial check for saved token and page display
+        window.addEventListener(\'DOMContentLoaded\', () => {
+            const savedToken = localStorage.getItem(\'adminToken\');
+            const savedAdmin = localStorage.getItem(\'adminData\');
+
             if (savedToken && savedAdmin) {
                 authToken = savedToken;
                 currentAdmin = JSON.parse(savedAdmin);
                 if (adminName) adminName.textContent = currentAdmin.name || currentAdmin.email;
-                if (loginPage) loginPage.classList.add('hidden');
-                if (dashboardPage) dashboardPage.classList.remove('hidden');
+                if (loginPage) loginPage.classList.add(\'hidden\');
+                if (dashboardPage) dashboardPage.classList.remove(\'hidden\');
                 loadDashboardData();
                 loadProductOptions();
             } else {
-                if (loginPage) loginPage.classList.remove('hidden');
-                if (dashboardPage) dashboardPage.classList.add('hidden');
+                // Ensure login page is visible and dashboard is hidden if no token
+                if (loginPage) loginPage.classList.remove(\'hidden\');
+                if (dashboardPage) dashboardPage.classList.add(\'hidden\');
             }
         });
 
