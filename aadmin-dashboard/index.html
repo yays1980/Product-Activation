@@ -6,6 +6,7 @@
     <title>لوحة تحكم نظام التفعيل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Base Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -15,6 +16,41 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: #34495e;
+        }
+
+        /* Sidebar Overlay for Mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Sidebar */
         .sidebar {
             width: 250px;
             background-color: #2c3e50;
@@ -24,24 +60,32 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: width 0.3s ease, transform 0.3s ease;
+            transition: transform 0.3s ease;
             position: relative;
-            z-index: 1200;
+            z-index: 1000;
         }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(100%);
+        }
+
         .sidebar h2 {
             text-align: center;
             color: #ecf0f1;
             margin-bottom: 30px;
             font-size: 1.5em;
         }
+
         .sidebar-menu ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .sidebar-menu li {
             margin-bottom: 10px;
         }
+
         .sidebar-menu a {
             color: #ecf0f1;
             text-decoration: none;
@@ -50,20 +94,46 @@
             border-radius: 5px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
             background-color: #34495e;
             color: #2ecc71;
         }
+
         .sidebar-menu a i {
             margin-right: 10px;
+            width: 20px;
+            text-align: center;
         }
+
+        /* Close button for mobile sidebar */
+        .sidebar-close {
+            display: none;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .sidebar-close:hover {
+            color: #e74c3c;
+        }
+
+        /* Main Content */
         .main-content {
             flex-grow: 1;
             padding: 20px;
             background-color: #f4f7f6;
             overflow-y: auto;
+            transition: margin-right 0.3s ease;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -74,20 +144,24 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+
         .header h1 {
             margin: 0;
             color: #2c3e50;
             font-size: 1.8em;
         }
+
         .user-info {
             display: flex;
             align-items: center;
         }
+
         .user-info span {
             margin-right: 10px;
             font-weight: bold;
             color: #34495e;
         }
+
         .logout-btn {
             background-color: #e74c3c;
             color: #fff;
@@ -97,15 +171,19 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .logout-btn:hover {
             background-color: #c0392b;
         }
+
+        /* Cards */
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
+
         .card {
             background-color: #fff;
             padding: 20px;
@@ -114,59 +192,75 @@
             text-align: center;
             transition: transform 0.2s ease;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }
+
         .card h3 {
             margin-top: 0;
             color: #34495e;
             font-size: 1.2em;
         }
+
         .card p {
             font-size: 2.2em;
             font-weight: bold;
             color: #2ecc71;
             margin: 10px 0;
         }
+
         .card i {
             font-size: 2.5em;
             color: #3498db;
             margin-bottom: 10px;
         }
+
+        /* Tables */
         .table-container {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 30px;
+            overflow-x: auto;
         }
+
         .table-container h3 {
             margin-top: 0;
             color: #34495e;
             margin-bottom: 15px;
         }
+
         .table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            min-width: 600px;
         }
+
         .table th,
         .table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: right;
         }
+
         .table th {
             background-color: #f8f8f8;
             font-weight: bold;
             color: #555;
         }
+
         .table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         .table tr:hover {
             background-color: #f1f1f1;
         }
+
+        /* Forms */
         .form-container {
             background-color: #fff;
             padding: 20px;
@@ -174,19 +268,23 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 30px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
+
         .form-group input[type="text"],
         .form-group input[type="email"],
         .form-group input[type="password"],
         .form-group input[type="number"],
+        .form-group input[type="date"],
         .form-group select,
         .form-group textarea {
             width: 100%;
@@ -196,9 +294,11 @@
             box-sizing: border-box;
             font-size: 1em;
         }
+
         .form-group input[type="checkbox"] {
             margin-left: 5px;
         }
+
         .btn {
             background-color: #3498db;
             color: #fff;
@@ -209,27 +309,36 @@
             transition: background-color 0.3s ease;
             font-size: 1em;
         }
+
         .btn:hover {
             background-color: #2980b9;
         }
+
         .btn-success {
             background-color: #2ecc71;
         }
+
         .btn-success:hover {
             background-color: #27ae60;
         }
+
         .btn-danger {
             background-color: #e74c3c;
         }
+
         .btn-danger:hover {
             background-color: #c0392b;
         }
+
         .btn-primary {
             background-color: #3498db;
         }
+
         .btn-primary:hover {
             background-color: #2980b9;
         }
+
+        /* Badges */
         .badge {
             padding: 5px 10px;
             border-radius: 4px;
@@ -237,21 +346,28 @@
             font-weight: bold;
             color: #fff;
         }
+
         .badge-success {
             background-color: #2ecc71;
         }
+
         .badge-danger {
             background-color: #e74c3c;
         }
+
         .badge-info {
             background-color: #3498db;
         }
+
+        /* Utility Classes */
         .hidden {
             display: none !important;
         }
+
         .text-center {
             text-align: center;
         }
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -260,24 +376,30 @@
             display: flex;
             align-items: center;
         }
+
         .alert i {
             margin-left: 10px;
         }
+
         .alert-success {
             color: #155724;
             background-color: #d4edda;
             border-color: #c3e6cb;
         }
+
         .alert-error {
             color: #721c24;
             background-color: #f8d7da;
             border-color: #f5c6cb;
         }
+
         .alert-info {
             color: #0c5460;
             background-color: #d1ecf1;
             border-color: #bee5eb;
         }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -290,15 +412,19 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            width: 80%;
+            width: 90%;
             max-width: 500px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
+
         .close-button {
             position: absolute;
             top: 10px;
@@ -306,73 +432,166 @@
             font-size: 28px;
             cursor: pointer;
         }
-        /* زر القائمة الجانبية للهاتف */
-        .sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1300;
-            background: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 9px 12px;
-            font-size: 22px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.14);
-            transition: background 0.3s;
-            display: none;
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .sidebar-toggle:hover {
-            background: #2980b9;
+
+        .login-box {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 400px;
         }
-        /* Responsive adjustments */
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
-            .sidebar-toggle {
-                display: block !important;
+            .mobile-menu-btn {
+                display: block;
             }
+
             .sidebar {
                 position: fixed;
                 top: 0;
                 right: 0;
                 height: 100vh;
-                width: 220px;
-                max-width: 80vw;
-                z-index: 1200;
-                background: #2c3e50;
+                width: 280px;
                 transform: translateX(100%);
-                transition: transform 0.3s ease;
-                box-shadow: -2px 0 10px rgba(0,0,0,0.12);
+                z-index: 1000;
             }
-            .sidebar.active {
+
+            .sidebar.mobile-visible {
                 transform: translateX(0);
             }
-            body.sidebar-open {
-                overflow: hidden;
+
+            .sidebar-overlay.active {
+                display: block;
             }
+
+            .sidebar-close {
+                display: block;
+            }
+
             .main-content {
-                padding: 15px;
+                width: 100%;
+                padding: 70px 15px 15px 15px;
             }
+
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
             .header h1 {
-                font-size: 1.5em;
+                font-size: 1.4em;
             }
+
             .card-container {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
-            .sidebar-menu a span {
-                display: none;
+
+            .card {
+                padding: 15px;
             }
+
+            .card p {
+                font-size: 1.8em;
+            }
+
+            .table-container {
+                padding: 15px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .login-box {
+                padding: 30px 20px;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
             .sidebar-menu a {
-                text-align: center;
-                padding: 10px 5px;
+                padding: 15px;
+                font-size: 16px;
             }
-            .sidebar-menu a i {
-                margin-right: 0;
+
+            .sidebar h2 {
+                font-size: 1.3em;
+                margin-bottom: 20px;
             }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px 10px;
+            }
+
+            .card p {
+                font-size: 1.5em;
+            }
+
+            .header h1 {
+                font-size: 1.2em;
+            }
+
+            .table-container {
+                padding: 10px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .login-box {
+                padding: 25px 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        /* Smooth transitions for better UX */
+        * {
+            transition: all 0.2s ease;
+        }
+
+        .sidebar,
+        .main-content {
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <div class="login-box">
@@ -394,10 +613,10 @@
 
     <!-- Dashboard Page -->
     <div id="dashboardPage" class="dashboard-container hidden">
-        <!-- زر القائمة الجانبية للهاتف -->
-        <button id="sidebarToggle" class="sidebar-toggle"><i class="fas fa-bars"></i></button>
-
-        <div class="sidebar">
+        <div class="sidebar mobile-hidden" id="sidebar">
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
             <div>
                 <h2>لوحة التحكم</h2>
                 <nav class="sidebar-menu">
@@ -467,13 +686,12 @@
                             </tr>
                         </thead>
                         <tbody id="recentActivations">
-                            <tr><td colspan="4" class="text-center">لا توجد تفعيلات</td></tr>
+                            <tr><td colspan="4" class="text-center">لا توجد تفعيلات حديثة</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- باقي المحتوى كما هو في الكود السابق ... -->
             <!-- Keys Content -->
             <div id="keysContent" class="page-content hidden">
                 <div class="table-container">
@@ -495,45 +713,849 @@
                     </table>
                 </div>
             </div>
-            <!-- ... باقي صفحات المنتجات والتقارير إلخ كما هو في الكود السابق ... -->
-            <!-- يمكنك نقل نفس المحتوى من الكود الأصلي هنا بدون تغيير -->
+
+            <!-- Products Content -->
+            <div id="productsContent" class="page-content hidden">
+                <div class="table-container">
+                    <h3>إدارة المنتجات</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الإصدار</th>
+                                <th>السعر</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsList">
+                            <tr><td colspan="5" class="text-center">لا توجد منتجات</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Activations Content -->
+            <div id="activationsContent" class="page-content hidden">
+                <div class="table-container">
+                    <h3>إدارة التفعيلات</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>المستخدم</th>
+                                <th>المنتج</th>
+                                <th>معرف الجهاز</th>
+                                <th>المفتاح</th>
+                                <th>تاريخ التفعيل</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activationsList">
+                            <tr><td colspan="6" class="text-center">لا توجد تفعيلات</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Key Content -->
+            <div id="addKeyContent" class="page-content hidden">
+                <div class="form-container">
+                    <h3>إضافة مفتاح جديد</h3>
+                    <form id="addKeyForm">
+                        <div class="form-group">
+                            <label for="productSelect">المنتج:</label>
+                            <select id="productSelect" required>
+                                <option value="">اختر منتج</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="keyCount">عدد المفاتيح:</label>
+                            <input type="number" id="keyCount" value="1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="keyNotes">ملاحظات (اختياري):</label>
+                            <textarea id="keyNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">إنشاء مفتاح</button>
+                        <div id="addKeyMessage" class="mt-3"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add Product Content -->
+            <div id="addProductContent" class="page-content hidden">
+                <div class="form-container">
+                    <h3>إضافة منتج جديد</h3>
+                    <form id="addProductForm">
+                        <div class="form-group">
+                            <label for="productName">اسم المنتج:</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productVersion">الإصدار:</label>
+                            <input type="text" id="productVersion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">السعر:</label>
+                            <input type="number" id="productPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productIsActive">نشط:</label>
+                            <input type="checkbox" id="productIsActive" checked>
+                        </div>
+                        <button type="submit" class="btn btn-success">إضافة منتج</button>
+                        <div id="addProductMessage" class="mt-3"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Reports Content -->
+            <div id="reportsContent" class="page-content hidden">
+                <div class="form-container">
+                    <h3>تقارير المبيعات والتفعيلات</h3>
+                    <form id="reportForm">
+                        <div class="form-group">
+                            <label for="reportProduct">المنتج:</label>
+                            <select id="reportProduct">
+                                <option value="">جميع المنتجات</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">من تاريخ:</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">إلى تاريخ:</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <button type="submit" class="btn btn-primary">إنشاء تقرير</button>
+                        <div id="reportMessage" class="mt-3"></div>
+                    </form>
+                </div>
+                <div class="table-container mt-4">
+                    <h3>نتائج التقرير</h3>
+                    <div id="reportResults" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>إجمالي المبيعات</th>
+                                    <th>إجمالي التفعيلات</th>
+                                    <th>مفاتيح غير مستخدمة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody">
+                                <tr><td colspan="4" class="text-center">لا توجد بيانات للتقرير</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Product Modal -->
+            <div id="editProductModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3>تعديل المنتج</h3>
+                    <form id="editProductForm">
+                        <input type="hidden" id="editProductId">
+                        <div class="form-group">
+                            <label for="editProductName">اسم المنتج:</label>
+                            <input type="text" id="editProductName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductVersion">الإصدار:</label>
+                            <input type="text" id="editProductVersion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductPrice">السعر:</label>
+                            <input type="number" id="editProductPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductIsActive">نشط:</label>
+                            <input type="checkbox" id="editProductIsActive">
+                        </div>
+                        <button type="submit" class="btn btn-primary">حفظ التعديلات</button>
+                        <div id="editProductMessage" class="mt-3"></div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // كود جافاسكريبت الأصلي الخاص بك (تسجيل الدخول، جلب البيانات ...)
+        // Mobile sidebar functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarClose = document.getElementById('sidebarClose');
 
-        // كود جعل القائمة الجانبية متجاوبة مع الموبايل
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-                document.body.classList.toggle('sidebar-open');
-            });
-            // إغلاق القائمة عند الضغط خارجها
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-                    if (!sidebar.contains(e.target) && e.target !== sidebarToggle) {
-                        sidebar.classList.remove('active');
-                        document.body.classList.remove('sidebar-open');
-                    }
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle('mobile-visible');
+            sidebar.classList.toggle('mobile-hidden');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        function closeMobileSidebar() {
+            sidebar.classList.add('mobile-hidden');
+            sidebar.classList.remove('mobile-visible');
+            sidebarOverlay.classList.remove('active');
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+        }
+
+        if (sidebarClose) {
+            sidebarClose.addEventListener('click', closeMobileSidebar);
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeMobileSidebar);
+        }
+
+        // Close sidebar when clicking on menu items on mobile
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
                 }
             });
-            // إغلاق القائمة عند اختيار أي رابط في القائمة الجانبية
-            sidebar.querySelectorAll('.sidebar-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('active');
-                        document.body.classList.remove('sidebar-open');
+        });
+
+        // Original JavaScript code with improvements
+        let authToken = null;
+        let currentAdmin = null;
+        const API_BASE_URL = 'https://productactivation.onrender.com';
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminName = document.getElementById('adminName');
+        const pageLinks = document.querySelectorAll('.sidebar-menu a');
+        const pageContents = document.querySelectorAll('.page-content');
+        const pageTitle = document.getElementById('pageTitle');
+
+        // Modals
+        const editProductModal = document.getElementById('editProductModal');
+        const editProductCloseButton = editProductModal ? editProductModal.querySelector('.close-button') : null;
+
+        // Utility function to show messages
+        function showMessage(element, message, type) {
+            if (!element) return;
+            element.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle')}"></i>
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => { element.innerHTML = ''; }, 5000);
+        }
+
+        // Login functionality
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                try {
+                    const response = await fetch(`${API_BASE_URL}/admin/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await response.json();
+                    console.log('Login response data:', data);
+                    if (data.success) {
+                        console.log('Login successful, processing...');
+                        authToken = data.token;
+                        currentAdmin = data.user;
+                        localStorage.setItem('adminToken', authToken);
+                        localStorage.setItem('adminData', JSON.stringify(currentAdmin));
+                        console.log('Token and user data saved to localStorage');
+                        
+                        if (adminName) {
+                            adminName.textContent = currentAdmin.name || currentAdmin.email;
+                            console.log('Admin name updated:', currentAdmin.name || currentAdmin.email);
+                        }
+                        
+                        console.log('Hiding login page and showing dashboard...');
+                        if (loginPage) {
+                            loginPage.classList.add('hidden');
+                            console.log('Login page hidden');
+                        }
+                        if (dashboardPage) {
+                            dashboardPage.classList.remove('hidden');
+                            console.log('Dashboard page shown');
+                        }
+                        
+                        console.log('Loading dashboard data...');
+                        loadDashboardData();
+                        loadProductOptions();
+                        console.log('Login process completed successfully');
+                    } else {
+                        showMessage(loginMessage, data.message, 'error');
+                    console.error('Login API response error:', data.message);
                     }
-                });
+                } catch (error) {
+                    showMessage(loginMessage, 'خطأ في الاتصال بالخادم. يرجى التحقق من عنوان API.', 'error');
+                    console.error('Login network error:', error);
+                }
             });
         }
 
-        // أكمل باقي الجافاسكريبت كما هو من الكود الأصلي الخاص بك
-        // ...
-        // (لا يوجد تعديل على وظائف النظام الأخرى)
+        // Logout functionality
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                authToken = null;
+                currentAdmin = null;
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminData');
+                if (dashboardPage) dashboardPage.classList.add('hidden');
+                if (loginPage) loginPage.classList.remove('hidden');
+                if (loginForm) loginForm.reset();
+                closeMobileSidebar(); // Close mobile sidebar on logout
+            });
+        }
+
+        // Page navigation
+        pageLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                pageLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                pageContents.forEach(content => content.classList.add('hidden'));
+                const pageId = link.getAttribute('data-page');
+                const pageContent = document.getElementById(`${pageId}Content`);
+                if (pageContent) {
+                    pageContent.classList.remove('hidden');
+                    if (pageTitle) pageTitle.textContent = link.querySelector('span').textContent;
+                }
+
+                if (pageId === 'keys') loadKeys();
+                else if (pageId === 'products') loadProducts();
+                else if (pageId === 'activations') loadActivations();
+                else if (pageId === 'dashboard') loadDashboardData();
+                else if (pageId === 'addKey') loadProductOptions();
+                else if (pageId === 'addProduct') { /* No specific data load needed */ }
+                else if (pageId === 'reports') loadProductOptions();
+
+                // Close mobile sidebar after navigation
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            });
+        });
+
+        // Load Dashboard Data
+        async function loadDashboardData() {
+            try {
+                const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (statsResponse.ok) {
+                    const statsData = await statsResponse.json();
+                    if (statsData.success) {
+                        if (document.getElementById('totalActivations')) document.getElementById('totalActivations').textContent = statsData.stats.total_activations || 0;
+                        if (document.getElementById('usedKeys')) document.getElementById('usedKeys').textContent = statsData.stats.used_keys || 0;
+                        if (document.getElementById('unusedKeys')) document.getElementById('unusedKeys').textContent = statsData.stats.unused_keys || 0;
+                        if (document.getElementById('totalProducts')) document.getElementById('totalProducts').textContent = statsData.stats.total_products || 0;
+                        if (document.getElementById('totalUsers')) document.getElementById('totalUsers').textContent = statsData.stats.total_users || 0;
+                    }
+                } else {
+                    console.error('Failed to load dashboard stats');
+                }
+
+                const activationsResponse = await fetch(`${API_BASE_URL}/admin/activations?limit=5`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (activationsResponse.ok) {
+                    const activationsData = await activationsResponse.json();
+                    const activationsList = document.getElementById('recentActivations');
+                    if (activationsList) {
+                        if (activationsData.success && activationsData.activations?.length > 0) {
+                            activationsList.innerHTML = activationsData.activations.map(activation => `
+                                <tr>
+                                    <td>${activation.products?.name || 'غير محدد'}</td>
+                                    <td>${activation.device_id || 'غير محدد'}</td>
+                                    <td>${new Date(activation.activation_date).toLocaleDateString('ar-SA')}</td>
+                                    <td><span class="badge badge-success">نشط</span></td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            activationsList.innerHTML = '<tr><td colspan="4" class="text-center">لا توجد تفعيلات حديثة</td></tr>';
+                        }
+                    }
+                } else {
+                    console.error('Failed to load recent activations');
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        // Load Keys
+        async function loadKeys() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/keys`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const keysList = document.getElementById('keysList');
+                    if (keysList) {
+                        if (data.success && data.keys?.length > 0) {
+                            keysList.innerHTML = data.keys.map(key => `
+                                <tr>
+                                    <td>${key.key_value}</td>
+                                    <td>${key.products?.name || 'غير محدد'} - ${key.products?.version || ''}</td>
+                                    <td><span class="badge ${key.is_used ? 'badge-danger' : 'badge-success'}">${key.is_used ? 'مستخدم' : 'غير مستخدم'}</span></td>
+                                    <td>${new Date(key.created_at).toLocaleDateString('ar-SA')}</td>
+                                    <td>${key.created_by || 'غير محدد'}</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="copyToClipboard('${key.key_value}')">نسخ</button>
+                                        ${!key.is_used ? `<button class="btn btn-danger" onclick="deleteKey('${key.key_value}')">حذف</button>` : ''}
+                                    </td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            keysList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد مفاتيح</td></tr>';
+                        }
+                    }
+                } else {
+                    console.error('Failed to load keys');
+                    const keysList = document.getElementById('keysList');
+                    if (keysList) {
+                        keysList.innerHTML = '<tr><td colspan="6" class="text-center">خطأ في تحميل المفاتيح</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading keys:', error);
+                const keysList = document.getElementById('keysList');
+                if (keysList) {
+                    keysList.innerHTML = '<tr><td colspan="6" class="text-center">خطأ في تحميل المفاتيح</td></tr>';
+                }
+            }
+        }
+
+        // Load Products
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const productsList = document.getElementById('productsList');
+                    if (productsList) {
+                        if (data.success && data.products?.length > 0) {
+                            productsList.innerHTML = data.products.map(product => `
+                                <tr>
+                                    <td>${product.name}</td>
+                                    <td>${product.version}</td>
+                                    <td>${product.price} ر.س</td>
+                                    <td><span class="badge ${product.is_active ? 'badge-success' : 'badge-danger'}">${product.is_active ? 'نشط' : 'غير نشط'}</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="openEditProductModal(${product.id})">تعديل</button>
+                                        <button class="btn ${product.is_active ? 'btn-danger' : 'btn-success'}" onclick="toggleProduct(${product.id}, ${!product.is_active})">${product.is_active ? 'تعطيل' : 'تفعيل'}</button>
+                                    </td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            productsList.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد منتجات</td></tr>';
+                        }
+                    }
+                } else {
+                    console.error('Failed to load products');
+                    const productsList = document.getElementById('productsList');
+                    if (productsList) {
+                        productsList.innerHTML = '<tr><td colspan="5" class="text-center">خطأ في تحميل المنتجات</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                const productsList = document.getElementById('productsList');
+                if (productsList) {
+                    productsList.innerHTML = '<tr><td colspan="5" class="text-center">خطأ في تحميل المنتجات</td></tr>';
+                }
+            }
+        }
+
+        // Load Activations
+        async function loadActivations() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/activations`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const activationsList = document.getElementById('activationsList');
+                    if (activationsList) {
+                        if (data.success && data.activations?.length > 0) {
+                            activationsList.innerHTML = data.activations.map(activation => `
+                                <tr>
+                                    <td>${activation.users?.email || 'غير محدد'}</td>
+                                    <td>${activation.products?.name || 'غير محدد'}</td>
+                                    <td>${activation.device_id || 'غير محدد'}</td>
+                                    <td>${activation.key_value || 'غير محدد'}</td>
+                                    <td>${new Date(activation.activation_date).toLocaleDateString('ar-SA')}</td>
+                                    <td><span class="badge badge-success">نشط</span></td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            activationsList.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد تفعيلات</td></tr>';
+                        }
+                    }
+                } else {
+                    console.error('Failed to load activations');
+                    const activationsList = document.getElementById('activationsList');
+                    if (activationsList) {
+                        activationsList.innerHTML = '<tr><td colspan="6" class="text-center">خطأ في تحميل التفعيلات</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading activations:', error);
+                const activationsList = document.getElementById('activationsList');
+                if (activationsList) {
+                    activationsList.innerHTML = '<tr><td colspan="6" class="text-center">خطأ في تحميل التفعيلات</td></tr>';
+                }
+            }
+        }
+
+        // Load Product Options
+        async function loadProductOptions() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const productSelect = document.getElementById('productSelect');
+                    const reportProduct = document.getElementById('reportProduct');
+                    
+                    if (data.success && data.products) {
+                        // Clear existing options (except the first default option)
+                        if (productSelect) {
+                            const defaultOption = productSelect.querySelector('option[value=""]');
+                            productSelect.innerHTML = '';
+                            if (defaultOption) productSelect.appendChild(defaultOption);
+                        }
+                        if (reportProduct) {
+                            const defaultOption = reportProduct.querySelector('option[value=""]');
+                            reportProduct.innerHTML = '';
+                            if (defaultOption) reportProduct.appendChild(defaultOption);
+                        }
+
+                        data.products.forEach(product => {
+                            if (product.is_active) {
+                                const opt1 = document.createElement('option');
+                                opt1.value = product.id;
+                                opt1.textContent = `${product.name} - الإصدار ${product.version}`;
+                                if (productSelect) productSelect.appendChild(opt1);
+                            }
+                            
+                            const opt2 = document.createElement('option');
+                            opt2.value = product.id;
+                            opt2.textContent = `${product.name} - الإصدار ${product.version}`;
+                            if (reportProduct) reportProduct.appendChild(opt2);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading product options:', error);
+            }
+        }
+
+        // Add New Key functionality
+        const addKeyForm = document.getElementById('addKeyForm');
+        if (addKeyForm) {
+            addKeyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const productId = document.getElementById('productSelect').value;
+                const keyCount = document.getElementById('keyCount').value;
+                const notes = document.getElementById('keyNotes').value;
+                if (!productId) {
+                    showMessage(document.getElementById('addKeyMessage'), 'يرجى اختيار منتج', 'error');
+                    return;
+                }
+                try {
+                    const response = await fetch(`${API_BASE_URL}/admin/keys`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({ product_id: productId, count: parseInt(keyCount), notes })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(document.getElementById('addKeyMessage'), `تم إنشاء ${data.keys?.length || keyCount} مفتاح بنجاح.`, 'success');
+                        addKeyForm.reset();
+                        loadKeys();
+                    } else {
+                        showMessage(document.getElementById('addKeyMessage'), 'فشل في إنشاء المفاتيح: ' + data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding key:', error);
+                    showMessage(document.getElementById('addKeyMessage'), 'خطأ في الاتصال بالخادم', 'error');
+                }
+            });
+        }
+
+        // Add New Product functionality
+        const addProductForm = document.getElementById('addProductForm');
+        if (addProductForm) {
+            addProductForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const productName = document.getElementById('productName').value;
+                const productVersion = document.getElementById('productVersion').value;
+                const productPrice = parseFloat(document.getElementById('productPrice').value);
+                const productIsActive = document.getElementById('productIsActive').checked;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/admin/products`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({ name: productName, version: productVersion, price: productPrice, is_active: productIsActive })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(document.getElementById('addProductMessage'), 'تم إضافة المنتج بنجاح.', 'success');
+                        addProductForm.reset();
+                        loadProducts();
+                        loadProductOptions();
+                    } else {
+                        showMessage(document.getElementById('addProductMessage'), 'فشل في إضافة المنتج: ' + data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    showMessage(document.getElementById('addProductMessage'), 'خطأ في الاتصال بالخادم', 'error');
+                }
+            });
+        }
+
+        // Delete Key functionality
+        async function deleteKey(keyValue) {
+            if (!confirm('هل أنت متأكد أنك تريد حذف هذا المفتاح؟')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/keys/${keyValue}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('تم حذف المفتاح بنجاح');
+                    loadKeys();
+                } else {
+                    alert('فشل في حذف المفتاح: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting key:', error);
+                alert('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        // Open Edit Product Modal
+        async function openEditProductModal(productId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.product) {
+                        const product = data.product;
+                        if (document.getElementById('editProductId')) document.getElementById('editProductId').value = product.id;
+                        if (document.getElementById('editProductName')) document.getElementById('editProductName').value = product.name;
+                        if (document.getElementById('editProductVersion')) document.getElementById('editProductVersion').value = product.version;
+                        if (document.getElementById('editProductPrice')) document.getElementById('editProductPrice').value = product.price;
+                        if (document.getElementById('editProductIsActive')) document.getElementById('editProductIsActive').checked = product.is_active === true;
+                        if (editProductModal) editProductModal.style.display = 'flex';
+                    } else {
+                        alert('فشل في تحميل بيانات المنتج: ' + data.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading product for edit:', error);
+                alert('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        // Close Edit Product Modal
+        if (editProductCloseButton) {
+            editProductCloseButton.addEventListener('click', () => {
+                if (editProductModal) editProductModal.style.display = 'none';
+            });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === editProductModal) {
+                if (editProductModal) editProductModal.style.display = 'none';
+            }
+        });
+
+        // Edit Product functionality
+        const editProductForm = document.getElementById('editProductForm');
+        if (editProductForm) {
+            editProductForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const productId = document.getElementById('editProductId').value;
+                const productName = document.getElementById('editProductName').value;
+                const productVersion = document.getElementById('editProductVersion').value;
+                const productPrice = parseFloat(document.getElementById('editProductPrice').value);
+                const productIsActive = document.getElementById('editProductIsActive').checked;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/admin/products/${productId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({ name: productName, version: productVersion, price: productPrice, is_active: productIsActive })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(document.getElementById('editProductMessage'), 'تم تحديث المنتج بنجاح.', 'success');
+                        if (editProductModal) editProductModal.style.display = 'none';
+                        loadProducts();
+                        loadProductOptions();
+                    } else {
+                        showMessage(document.getElementById('editProductMessage'), 'فشل في تحديث المنتج: ' + data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error editing product:', error);
+                    showMessage(document.getElementById('editProductMessage'), 'خطأ في الاتصال بالخادم', 'error');
+                }
+            });
+        }
+
+        // Toggle Product Status
+        async function toggleProduct(productId, isActive) {
+            if (!confirm(`هل أنت متأكد أنك تريد ${isActive ? 'تفعيل' : 'تعطيل'} هذا المنتج؟`)) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}/toggle-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ is_active: isActive })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`تم ${isActive ? 'تفعيل' : 'تعطيل'} المنتج بنجاح`);
+                    loadProducts();
+                    loadProductOptions();
+                } else {
+                    alert('فشل في تعديل حالة المنتج: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error toggling product:', error);
+                alert('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        // Copy to Clipboard
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                alert('تم نسخ المفتاح إلى الحافظة!');
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('فشل في نسخ المفتاح. يرجى النسخ يدوياً.');
+            }
+        }
+
+        // Report Generation
+        const reportForm = document.getElementById('reportForm');
+        if (reportForm) {
+            reportForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const productId = document.getElementById('reportProduct').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const reportMessageElement = document.getElementById('reportMessage');
+                const reportTableBody = document.getElementById('reportTableBody');
+
+                try {
+                    let url = `${API_BASE_URL}/admin/reports/summary`;
+                    const params = new URLSearchParams();
+                    if (productId) params.append('product_id', productId);
+                    if (startDate) params.append('start_date', startDate);
+                    if (endDate) params.append('end_date', endDate);
+
+                    if (params.toString()) {
+                        url += `?${params.toString()}`;
+                    }
+
+                    const response = await fetch(url, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.success && data.report) {
+                        const report = data.report;
+                        reportTableBody.innerHTML = `
+                            <tr>
+                                <td>${report.product_name || 'جميع المنتجات'}</td>
+                                <td>${report.total_sales || 0}</td>
+                                <td>${report.total_activations || 0}</td>
+                                <td>${report.unused_keys || 0}</td>
+                            </tr>
+                        `;
+                        showMessage(reportMessageElement, 'تم إنشاء التقرير بنجاح.', 'success');
+                    } else {
+                        reportTableBody.innerHTML = '<tr><td colspan="4" class="text-center">لا توجد بيانات للتقرير</td></tr>';
+                        showMessage(reportMessageElement, 'فشل في إنشاء التقرير: ' + (data.message || 'لا توجد بيانات متاحة.'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Error generating report:', error);
+                    showMessage(reportMessageElement, 'خطأ في الاتصال بالخادم عند إنشاء التقارير.', 'error');
+                    reportTableBody.innerHTML = '<tr><td colspan="4" class="text-center">خطأ في تحميل البيانات</td></tr>';
+                }
+            });
+        }
+
+        // Initial check for saved token and page display
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedToken = localStorage.getItem('adminToken');
+            const savedAdmin = localStorage.getItem('adminData');
+
+            if (savedToken && savedAdmin) {
+                authToken = savedToken;
+                currentAdmin = JSON.parse(savedAdmin);
+                if (adminName) adminName.textContent = currentAdmin.name || currentAdmin.email;
+                if (loginPage) loginPage.classList.add('hidden');
+                if (dashboardPage) dashboardPage.classList.remove('hidden');
+                loadDashboardData();
+                loadProductOptions();
+            } else {
+                // Ensure login page is visible and dashboard is hidden if no token
+                if (loginPage) loginPage.classList.remove('hidden');
+                if (dashboardPage) dashboardPage.classList.add('hidden');
+            }
+        });
+
+        // Handle window resize to manage sidebar state
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMobileSidebar();
+            }
+        });
     </script>
 </body>
 </html>
